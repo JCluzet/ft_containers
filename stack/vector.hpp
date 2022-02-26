@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/02/20 23:18:48 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/02/26 22:39:01 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,11 @@ class Vector
         Vector() {
             _size = 0;
             _capacity = 1;
-            resize(1);
+            resize(0);
         };
-        ~Vector() {};
+        ~Vector() {
+            delete [] tab;
+        };
         void push_back(T i) {
             if (_size == _capacity)
                 resize(++_capacity);

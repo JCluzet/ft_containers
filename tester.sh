@@ -3,18 +3,24 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 RESET='\033[0m'
 
-output=$(make re && ./container)
+make re > /dev/null 2>&1
+output=$(./container)
 
-printf "Create new main with ft:: instead of std:: ...\n"
+printf "FT::\n\n$output\n\n\n\n----------------------------------------------\n"
 
 mv main.cpp mainback
-cat mainback | sed 's/std::stack/ft::stack/g' > main.cpp
+cat mainback | sed 's/ft::stack/std::stack/g' | sed 's/ft::vector/std::vector/g' > main.cpp
 
-printf "Done !\n\n"
-output2=$(make re && ./container)
+
+make re > /dev/null 2>&1
+
+output2=$(./container)
+
+printf "STD::\n\n$output2\n"
+
 
 diff=$(diff <(echo "$output") <(echo "$output2"))
-printf "RESULT : "
+printf "\n\nRESULT : "
 # if diff is empty, then the two files are the same, else output diff
 if [ -z "$diff" ]; then
     printf "$GREEN Test passed with same output :)$RESET\n\n"

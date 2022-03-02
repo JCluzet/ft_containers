@@ -6,13 +6,11 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 03:56:12 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/02/26 22:18:32 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/02 16:36:12 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-
-#include <iostream>
 #include "vector.hpp"
 
 namespace ft
@@ -21,7 +19,7 @@ namespace ft
     class stack
     {
     private:
-        ft::Vector<T> tab;
+        ft::vector<T> tab;
 
     public:
         stack() {};

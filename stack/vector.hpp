@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/02 17:19:32 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/05 18:21:02 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ namespace ft
             for (size_type i = 0; i < n; i++)
                 _begin[i] = e;
         }
+        // template<it> 
         vector(iterator begin, iterator end)    // range constructor
         {
             _size = 0;

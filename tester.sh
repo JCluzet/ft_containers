@@ -9,7 +9,7 @@ output=$(./container)
 printf "FT::\n\n$output\n\n\n\n----------------------------------------------\n"
 
 mv main.cpp mainback
-cat mainback | sed 's/ft::stack/std::stack/g' | sed 's/ft::vector/std::vector/g' > main.cpp
+cat mainback | sed 's/ft::stack/std::stack/g' | sed 's/ft::vector/std::vector/g' | sed 's/ft::enable_if/std::enable_if/g' > main.cpp
 
 
 make re > /dev/null 2>&1

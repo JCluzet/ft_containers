@@ -9,7 +9,7 @@ output=$(./container)
 printf "FT::\n\n$output\n\n\n\n----------------------------------------------\n"
 
 mv main.cpp mainback
-cat mainback | sed 's/ft::stack/std::stack/g' | sed 's/ft::vector/std::vector/g' | sed 's/ft::enable_if/std::enable_if/g' > main.cpp
+cat mainback | sed 's/ft::stack/std::stack/g' | sed 's/ft::vector/std::vector/g' | sed 's/ft::enable_if/std::enable_if/g' | sed '16d' | sed '16d' > main.cpp
 
 
 make re > /dev/null 2>&1
@@ -25,8 +25,8 @@ printf "\n\nRESULT : "
 if [ -z "$diff" ]; then
     printf "$GREEN Test passed with same output :)$RESET\n\n"
 else
-    printf "$RED Test failed !$RESET\n"
     printf "$diff\n"
+    printf "$RED Test failed !$RESET\n"
 fi
 
 printf "Restoring old version...\n"

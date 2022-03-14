@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/07 02:31:45 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/13 14:33:35 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ namespace ft
             _begin = _alloc.allocate(n);
             for (size_type i = 0; i < n; i++)
                 _alloc.construct(&_begin[i], val);
-            
         }
 
         template <class InputIterator>
@@ -80,7 +79,7 @@ namespace ft
 
         size_type size() const { return _size; }
 
-        size_type max_size() const { return _capacity; }
+        size_type max_size() const { return this->_alloc.max_size(); }
 
         size_type capacity() const { return _capacity; }
 
@@ -151,8 +150,11 @@ namespace ft
         // --------------------------MODIFIERS----------------------------- //      ✅
 
         template <class InputIterator>
-        void assign(InputIterator first, InputIterator last)
+        void assign(InputIterator first, InputIterator last, typename ft::enable_if<!std::numeric_limits<InputIterator>::is_integer>::type * = 0)
         {
+            while (_size > 0)
+                _alloc.destroy(&_begin[_size--]);
+            _size = 0;
             for (; first != last;)
                 push_back(*first++);
         }
@@ -160,7 +162,7 @@ namespace ft
         void assign(size_type n, const value_type &val)
         {
             for (size_type i = 0; i < n; i++)
-                _begin[i] = val;
+                push_back(val);
         }
 
         void push_back(const value_type &val)
@@ -178,10 +180,14 @@ namespace ft
                 this->_alloc.construct(&this->_begin[i], tmp[i]);
                 this->_alloc.destroy(&tmp[i]);
             }
+            // void *ptr = malloc(sizeof(value_type));
             this->_alloc.construct(&this->_begin[this->_size], val);
-            this->_alloc.deallocate(tmp, this->_capacity);
+            // this->_alloc.deallocate(tmp, this->_capacity);
             _size++;
-            this->_capacity = _size;
+            if (this->_capacity > 0)
+                this->_capacity = _capacity*2;
+            else
+                this->_capacity = 1;
         }
 
         void pop_back()
@@ -194,31 +200,53 @@ namespace ft
 
         iterator insert(iterator position, const value_type &val)
         {
-            if (_size == _capacity)
-                resize(_size + 1);
-            for (size_type i = _size; i > position - _begin; i--)
-                _begin[i] = _begin[i - 1];
-            _alloc.construct(&_begin[position - _begin], val);
-            _size++;
-            return position;
+            size_type n = position - this->begin();
+            this->insert(position, 1, val);
+
+            return this->_begin + n;
         }
 
         void insert(iterator position, size_type n, const value_type &val)
         {
-            if (n > _capacity)
-                resize(_size + n);
-            for (size_type i = _size; i > position - _begin; i--)
-                _begin[i] = _begin[i - n];
-            for (size_type i = 0; i < n; i++)
-                _alloc.construct(&_begin[position - _begin + i], val);
-            _size += n;
+            vector tmp = *this;
+            size_type start = position - this->begin();
+            size_type i;
+
+            for (i = start; i < n + start && i < this->size(); i++)
+                (*this)[i] = val;
+            for (size_type j = i; j < n + start; j++, i++)
+                this->push_back(val);
+
+            for (iterator it = tmp.begin() + start; it != tmp.end(); it++, i++)
+            {
+                if (i < this->size())
+                    (*this)[i] = *it;
+                else
+                    this->push_back(*it);
+            }
         }
 
         template <class InputIterator>
-        void insert(iterator position, InputIterator first, InputIterator last)
+        void insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value>::type * = 0)
         {
-            for (; first != last;)
-                insert(position, *first++);
+            vector tmp = *this;
+            size_type start = position - this->begin();
+            size_type i;
+
+            for (i = start; first != last; first++, i++)
+            {
+                if (i < this->size())
+                    (*this)[i] = *first;
+                else
+                    this->push_back(*first);
+            }
+            for (iterator it = tmp.begin() + start; it != tmp.end(); it++, i++)
+            {
+                if (i < this->size())
+                    (*this)[i] = *it;
+                else
+                    this->push_back(*it);
+            }
         }
 
         void erase(iterator position)
@@ -231,12 +259,14 @@ namespace ft
 
         iterator erase(iterator first, iterator last)
         {
-            for (size_type i = first - _begin; i < last - _begin; i++)
-                _alloc.destroy(&_begin[i]);
-            for (size_type i = first - _begin; i < _size - (last - _begin); i++)
-                _begin[i] = _begin[i + (last - first)];
-            _size -= (last - first);
-            return first;
+            size_type n = last - first;
+            size_type i = first - _begin;
+            for (size_type j = i; j < _size - n; j++)
+                _begin[j] = _begin[j + n];
+            for (size_type j = _size - n; j < _size; j++)
+                _alloc.destroy(&_begin[j]);
+            _size -= n;
+            return _begin + i;
         }
 
         void swap(vector &x)

@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/19 22:29:26 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/20 00:37:23 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,14 @@ namespace ft
 			}
 		}
 
-        vector(const vector &x) // copy constructor
+        vector(const vector &x)
         {
-            *this = x;
+            size_type n = x._size;
+            _size = n;
+            _capacity = n;
+            _begin = _alloc.allocate(n);
+            for (size_type i = 0; i < n; i++)
+                _alloc.construct(&_begin[i], x._begin[i]);
         }
 
         ~vector()
@@ -95,19 +100,12 @@ namespace ft
 
         void resize(size_type n, value_type val = value_type())
         {
-            if (n > _capacity)
+            while (_size > n)
+                pop_back();
+            if ( n > _capacity * 2)
                 reserve(n);
-            if (n > _size)
-            {
-                for (size_type i = _size; i < n; i++)
-                    _alloc.construct(&_begin[i], val);
-            }
-            else if (n < _size)
-            {
-                for (size_type i = n; i < _size; i++)
-                    _alloc.destroy(&_begin[i]);
-            }
-            _size = n;
+            while (_size < n)
+                push_back(val);
         }
 
         void reserve(size_type n)
@@ -300,12 +298,20 @@ namespace ft
             return _begin + i;
         }
 
-        void swap(vector &x)
-        {
-            vector tmp(x);
-            x = *this;
-            *this = tmp;
-        }
+        void swap (vector& x){
+			pointer			bg = _begin;
+			size_type		size = _size;
+			size_type		capacity = _capacity;
+			allocator_type	alloc = _alloc;
+			_begin = x._begin;
+			_size = x._size;
+			_capacity = x._capacity;
+			_alloc = x._alloc;
+			x._begin = bg;
+			x._size = size;
+			x._capacity = capacity;
+			x._alloc = alloc;
+		}
 
         void clear()
         {

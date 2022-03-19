@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 15:00:40 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/07 22:40:57 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/20 00:14:19 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,11 @@ namespace ft
         vectiterator &operator+(int i)
         {
             _ptr += i;
+            return *this;
+        }
+        vectiterator &operator-(int i)
+        {
+            _ptr -= i;
             return *this;
         }
         friend vectiterator	operator-(difference_type n, const vectiterator& it) 

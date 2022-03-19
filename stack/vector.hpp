@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/19 21:43:17 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/19 22:29:26 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ namespace ft
 
         typedef T value_type;
         typedef Alloc allocator_type; // alloc use?
+        typedef typename std::ptrdiff_t						difference_type;
         typedef typename allocator_type::reference reference;
         typedef typename allocator_type::const_reference const_reference;
         typedef vectiterator<T> iterator;
@@ -209,56 +210,52 @@ namespace ft
             _size--;
         }
 
-        iterator insert(iterator position, const value_type &val)
-        {
-            size_type n = position - this->begin();
-            this->insert(position, 1, val);
-
-            return this->_begin + n;
-        }
-
-        void insert(iterator position, size_type n, const value_type &val)
-        {
-            vector tmp = *this;
-            size_type start = position - this->begin();
-            size_type i;
-
-            for (i = start; i < n + start && i < this->size(); i++)
-                (*this)[i] = val;
-            for (size_type j = i; j < n + start; j++, i++)
-                this->push_back(val);
-
-            for (iterator it = tmp.begin() + start; it != tmp.end(); it++, i++)
-            {
-                if (i < this->size())
-                    (*this)[i] = *it;
-                else
-                    this->push_back(*it);
-            }
-        }
-
-        template <class InputIterator>
-        void insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value>::type * = 0)
-        {
-            vector tmp = *this;
-            size_type start = position - this->begin();
-            size_type i;
-
-            for (i = start; first != last; first++, i++)
-            {
-                if (i < this->size())
-                    (*this)[i] = *first;
-                else
-                    this->push_back(*first);
-            }
-            for (iterator it = tmp.begin() + start; it != tmp.end(); it++, i++)
-            {
-                if (i < this->size())
-                    (*this)[i] = *it;
-                else
-                    this->push_back(*it);
-            }
-        }
+		iterator insert (iterator position, const value_type& val) {
+			difference_type n = position - begin();
+			insert(position, 1, val);
+			return (begin() + n);
+		}
+		void insert (iterator position, size_type n, const value_type& val) {
+			iterator	it = end();
+			vector		tmp(position, it);
+			while (it != position){
+				pop_back();
+				it--;
+			}
+			while (n){
+				push_back(val);
+				n--;
+			}
+			it = tmp.begin();
+			while (it != tmp.end()){
+				push_back(*it);
+				it++;
+			}
+		}
+        // template<typename InputIterator>
+		// void insert (iterator position, InputIterator first, InputIterator last) {
+		// 	typedef typename ft::is_integer_my<InputIterator>::type_my _Integral;
+		// 	_insert(position, first, last, _Integral());
+		// }
+		template <class InputIterator>
+    	void insert (iterator position, InputIterator first, InputIterator last,
+		typename ft::enable_if<!std::is_integral<InputIterator>::value>::type * = 0) {
+			iterator	it = end();
+			vector		tmp(position, it);
+			while (it != position){
+				pop_back();
+				it--;
+			}
+			while (first != last){
+				push_back(*first);
+				first++;
+			}
+			it = tmp.begin();
+			while (it != tmp.end()){
+				push_back(*it);
+				it++;
+			}
+		}
 
         // void erase(iterator position)
         // {

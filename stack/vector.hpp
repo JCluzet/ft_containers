@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/19 16:08:49 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/19 21:43:17 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,35 +46,47 @@ namespace ft
         }
 
         template <class InputIterator>
-        vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(), // range constructor
-               typename ft::enable_if<!std::numeric_limits<InputIterator>::is_integer>::type * = 0) : _alloc(alloc), _size(0), _capacity(0)
-        {
-            _begin = nullptr;
-            for (; first != last;)
-                push_back(*first++);
-        }
+        vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
+		typename ft::enable_if<!std::is_integral<InputIterator>::value>::type * = 0)
+		: _alloc(alloc), _size(0){
+            size_type n = 0;
+			for (InputIterator it = first; it != last; it++)
+				++n;
+			_capacity = n;
+            _size = n;
+			_begin = _alloc.allocate(n);
+			for (size_type i = 0; i < n; i++) {
+				_alloc.construct(&_begin[i], *first);
+				first++;
+			}
+		}
 
         vector(const vector &x) // copy constructor
         {
             *this = x;
         }
 
-        ~vector() {}
+        ~vector()
+        {
+            this->clear();
+            this->_alloc.deallocate(this->_begin, this->_capacity);
+        }
 
         vector &operator=(const vector &x)
         {
             clear();
-            reserve(x._size());
-            for (size_type i = 0; i < x._size(); i++)
+            reserve(x.size());
+            for (size_type i = 0; i < x.size(); i++)
                 _alloc.construct(&_begin[i], x._begin[i]);
-            _size = x._size();
+            _size = x.size();
+            return *this;
         }
 
         // --------------------------CAPACITY----------------------------- //   ✅
 
         size_type size() const { return _size; }
 
-        size_type max_size () const throw()	{ return std::numeric_limits<long>::max() / sizeof(T); }
+        size_type max_size() const throw() { return std::numeric_limits<long>::max() / sizeof(T); }
 
         size_type capacity() const { return _capacity; }
 
@@ -156,33 +168,37 @@ namespace ft
 
         void assign(size_type n, const value_type &val)
         {
-            for (size_type i = 0; i < n; i++)
-                push_back(val);
+            while (_size > 0)
+                _alloc.destroy(&_begin[_size--]);
+            *this = vector(n, val);
         }
 
         void push_back(const value_type &val)
         {
-            if (this->_capacity > _size)
+            size_type oldcap = 1;
+            if (_capacity >= _size + 1)
             {
                 this->_alloc.construct(&this->_begin[_size], val);
                 _size++;
                 return;
             }
+            if (this->_capacity > 0)
+            {
+                oldcap = _capacity;
+                this->_capacity = _capacity * 2;
+            }
+            else
+                this->_capacity = 1;
             pointer tmp = this->_begin;
-            this->_begin = this->_alloc.allocate(this->_size + 1);
+            this->_begin = this->_alloc.allocate(oldcap);
             for (size_type i = 0; i < this->_size; i++)
             {
                 this->_alloc.construct(&this->_begin[i], tmp[i]);
                 this->_alloc.destroy(&tmp[i]);
             }
-            // void *ptr = malloc(sizeof(value_type));
             this->_alloc.construct(&this->_begin[this->_size], val);
             this->_alloc.deallocate(tmp, this->_capacity);
             _size++;
-            if (this->_capacity > 0)
-                this->_capacity = _capacity*2;
-            else
-                this->_capacity = 1;
         }
 
         void pop_back()
@@ -261,17 +277,19 @@ namespace ft
         //     _size--;
         // }
 
-		iterator erase (iterator position) {
-			iterator	it = end();
-			vector		tmp(position + 1, it);
-			while (it != position){
-				pop_back();
-				it--;
-			}
-			for (iterator ite = tmp.begin(); ite != tmp.end(); ite++)
-				push_back(*ite);
-			return position;
-		}
+        iterator erase(iterator position)
+        {
+            iterator it = end();
+            vector tmp(position + 1, it);
+            while (it != position)
+            {
+                pop_back();
+                it--;
+            }
+            for (iterator ite = tmp.begin(); ite != tmp.end(); ite++)
+                push_back(*ite);
+            return position;
+        }
 
         iterator erase(iterator first, iterator last)
         {

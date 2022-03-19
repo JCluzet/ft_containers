@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/13 14:33:35 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/19 16:08:49 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ namespace ft
     public:
         // --------------------------TYPEDEF------------------------------ //   ✅
 
+        typedef T value_type;
         typedef Alloc allocator_type; // alloc use?
         typedef typename allocator_type::reference reference;
         typedef typename allocator_type::const_reference const_reference;
-        typedef T value_type;
         typedef vectiterator<T> iterator;
         typedef size_t size_type;
         typedef typename allocator_type::pointer pointer;
@@ -34,7 +34,7 @@ namespace ft
 
         explicit vector(const allocator_type &alloc = allocator_type()) : _alloc(alloc), _size(0), _capacity(0) // empty constructor
         {
-            _begin = nullptr;
+            _begin = NULL;
         }
 
         explicit vector(size_type n, const value_type &val = value_type(), // fill constructor
@@ -56,30 +56,25 @@ namespace ft
 
         vector(const vector &x) // copy constructor
         {
-            _size = x._size;
-            _capacity = x._capacity;
-            _begin = new T[x._capacity];
-            for (size_type i = 0; i < _size; i++)
-                _begin[i] = x._begin[i];
+            *this = x;
         }
 
         ~vector() {}
 
         vector &operator=(const vector &x)
         {
-            _size = x._size;
-            _capacity = x._capacity;
-            _begin = new T[_capacity];
-            for (size_t i = 0; i < _size; i++)
-                _begin[i] = x._begin[i];
-            return *this;
+            clear();
+            reserve(x._size());
+            for (size_type i = 0; i < x._size(); i++)
+                _alloc.construct(&_begin[i], x._begin[i]);
+            _size = x._size();
         }
 
         // --------------------------CAPACITY----------------------------- //   ✅
 
         size_type size() const { return _size; }
 
-        size_type max_size() const { return this->_alloc.max_size(); }
+        size_type max_size () const throw()	{ return std::numeric_limits<long>::max() / sizeof(T); }
 
         size_type capacity() const { return _capacity; }
 
@@ -182,7 +177,7 @@ namespace ft
             }
             // void *ptr = malloc(sizeof(value_type));
             this->_alloc.construct(&this->_begin[this->_size], val);
-            // this->_alloc.deallocate(tmp, this->_capacity);
+            this->_alloc.deallocate(tmp, this->_capacity);
             _size++;
             if (this->_capacity > 0)
                 this->_capacity = _capacity*2;
@@ -249,13 +244,34 @@ namespace ft
             }
         }
 
-        void erase(iterator position)
-        {
-            for (size_type i = position - _begin; i < _size - 1; i++)
-                _begin[i] = _begin[i + 1];
-            _alloc.destroy(&_begin[_size - 1]);
-            _size--;
-        }
+        // void erase(iterator position)
+        // {
+        //     for (size_type i = position - _begin; i < _size - 1; i++)
+        //         _begin[i] = _begin[i + 1];
+        //     _alloc.destroy(&_begin[_size - 1]);
+        //     _size--;
+        // }
+
+        // iterator erase(iterator position)
+        // {
+        //     size_type n = position - this->begin();
+        //     for (size_type i = n; i < _size - 1; i++)
+        //         _begin[i] = _begin[i + 1];
+        //     _alloc.destroy(&_begin[_size - 1]);
+        //     _size--;
+        // }
+
+		iterator erase (iterator position) {
+			iterator	it = end();
+			vector		tmp(position + 1, it);
+			while (it != position){
+				pop_back();
+				it--;
+			}
+			for (iterator ite = tmp.begin(); ite != tmp.end(); ite++)
+				push_back(*ite);
+			return position;
+		}
 
         iterator erase(iterator first, iterator last)
         {

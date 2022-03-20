@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/20 00:37:23 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/20 01:19:45 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,32 +271,63 @@ namespace ft
         //     _alloc.destroy(&_begin[_size - 1]);
         //     _size--;
         // }
+        iterator erase (iterator position) {
+			iterator	it = end();
+			vector		tmp(position + 1, it);
+			while (it != position){
+				pop_back();
+				it--;
+			}
+            pop_back();
+			return position;
+		}
+        // iterator erase (iterator position) {
+        //     vector tmp(position + 1, end());
+        //     iterator it = begin();
+        //     while (it != position)
+        //         it++;
+        //     std::cout << "HERE > " << *it << std::endl;
+        //     size_type n = 0;
+        //     while (it != end())
+        //     {
+        //         pop_back();
+        //         n++;
+        //     }
+        //     pop_back();
+        //     // iterator it1 = tmp.begin();
+        //     // while ( n > 0)
+        //     // {
+        //     //     push_back(*it1);
+        //     //     it1++;
+        //     //     n--;
+        //     // }
+        //     // it = begin();
+            
+        //     return (position);
+        // }
 
-        iterator erase(iterator position)
-        {
-            iterator it = end();
-            vector tmp(position + 1, it);
-            while (it != position)
-            {
-                pop_back();
-                it--;
-            }
-            for (iterator ite = tmp.begin(); ite != tmp.end(); ite++)
-                push_back(*ite);
-            return position;
-        }
-
-        iterator erase(iterator first, iterator last)
-        {
-            size_type n = last - first;
-            size_type i = first - _begin;
-            for (size_type j = i; j < _size - n; j++)
-                _begin[j] = _begin[j + n];
-            for (size_type j = _size - n; j < _size; j++)
-                _alloc.destroy(&_begin[j]);
-            _size -= n;
-            return _begin + i;
-        }
+        // iterator erase (iterator position) {
+		// 	iterator	it = end();
+		// 	vector		tmp(position + 1, it);
+		// 	while (it != position){
+		// 		pop_back();
+		// 		it--;
+		// 	}
+		// 	for (iterator ite = tmp.begin(); ite != tmp.end(); ite++)
+		// 		push_back(*ite);
+		// 	return position;
+		// }
+		iterator erase (iterator first, iterator last){
+			vector tmp(last, end());
+			iterator it = end() - 1;
+			while (it != first - 1){
+				pop_back();
+				it--;
+			}
+			for (iterator ite = tmp.begin(); ite != tmp.end(); ite++)
+				push_back(*ite);
+			return first;
+		}
 
         void swap (vector& x){
 			pointer			bg = _begin;

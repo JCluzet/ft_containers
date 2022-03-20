@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/20 02:08:18 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/20 03:13:52 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,10 @@ namespace ft
 
         size_type size() const { return _size; }
 
-        size_type max_size() const throw() { return _alloc.max_size(); }
+        size_type max_size() const {
+        return (std::min((size_type) std::numeric_limits<difference_type>::max(),
+						std::numeric_limits<size_type>::max() / sizeof(value_type)));
+    }
 
         size_type capacity() const { return _capacity; }
 

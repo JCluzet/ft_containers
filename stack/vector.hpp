@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/20 01:19:45 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/20 02:08:18 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ namespace ft
 
         size_type size() const { return _size; }
 
-        size_type max_size() const throw() { return std::numeric_limits<long>::max() / sizeof(T); }
+        size_type max_size() const throw() { return _alloc.max_size(); }
 
         size_type capacity() const { return _capacity; }
 
@@ -255,79 +255,37 @@ namespace ft
 			}
 		}
 
-        // void erase(iterator position)
-        // {
-        //     for (size_type i = position - _begin; i < _size - 1; i++)
-        //         _begin[i] = _begin[i + 1];
-        //     _alloc.destroy(&_begin[_size - 1]);
-        //     _size--;
-        // }
-
-        // iterator erase(iterator position)
-        // {
-        //     size_type n = position - this->begin();
-        //     for (size_type i = n; i < _size - 1; i++)
-        //         _begin[i] = _begin[i + 1];
-        //     _alloc.destroy(&_begin[_size - 1]);
-        //     _size--;
-        // }
-        iterator erase (iterator position) {
-			iterator	it = end();
-			vector		tmp(position + 1, it);
-			while (it != position){
-				pop_back();
-				it--;
-			}
-            pop_back();
+        iterator erase (iterator const &position) {
+			size_type index = position - begin();
+			_alloc.destroy(_begin + index);
+			std::move(_begin + index + 1, _begin + _size, _begin + index);
+			_size -= 1;
 			return position;
 		}
-        // iterator erase (iterator position) {
-        //     vector tmp(position + 1, end());
-        //     iterator it = begin();
-        //     while (it != position)
-        //         it++;
-        //     std::cout << "HERE > " << *it << std::endl;
-        //     size_type n = 0;
-        //     while (it != end())
-        //     {
-        //         pop_back();
-        //         n++;
-        //     }
-        //     pop_back();
-        //     // iterator it1 = tmp.begin();
-        //     // while ( n > 0)
-        //     // {
-        //     //     push_back(*it1);
-        //     //     it1++;
-        //     //     n--;
-        //     // }
-        //     // it = begin();
-            
-        //     return (position);
-        // }
 
-        // iterator erase (iterator position) {
-		// 	iterator	it = end();
-		// 	vector		tmp(position + 1, it);
-		// 	while (it != position){
+        // create iterator erase (iterator first, iterator last) with erase (iterator first)
+        iterator erase (iterator const &first, iterator const &last)
+        {
+            // erase all elements in [first, last)
+            difference_type n = last - first;
+            difference_type index = first - begin();
+            _alloc.destroy(_begin + index);
+            std::move(_begin + index + n, _begin + _size, _begin + index);
+            _size -= n;
+            return first;
+        }
+
+        // iterator erase (iterator first, iterator last){
+		// 	vector tmp(last, end());
+		// 	iterator it = end() - 1;
+		// 	while (it != first - 1){
 		// 		pop_back();
 		// 		it--;
 		// 	}
 		// 	for (iterator ite = tmp.begin(); ite != tmp.end(); ite++)
 		// 		push_back(*ite);
-		// 	return position;
+		// 	return first;
 		// }
-		iterator erase (iterator first, iterator last){
-			vector tmp(last, end());
-			iterator it = end() - 1;
-			while (it != first - 1){
-				pop_back();
-				it--;
-			}
-			for (iterator ite = tmp.begin(); ite != tmp.end(); ite++)
-				push_back(*ite);
-			return first;
-		}
 
         void swap (vector& x){
 			pointer			bg = _begin;

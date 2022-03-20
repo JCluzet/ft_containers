@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/20 03:13:52 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/20 19:15:39 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,11 @@ namespace ft
 			}
 		}
 
-        vector(const vector &x)
+        // constructor by copy
+        vector(const vector &x) : _alloc(x._alloc), _size(x._size), _capacity(x._size)
         {
-            size_type n = x._size;
-            _size = n;
-            _capacity = n;
-            _begin = _alloc.allocate(n);
-            for (size_type i = 0; i < n; i++)
+            _begin = _alloc.allocate(x._capacity);
+            for (size_type i = 0; i < _size; i++)
                 _alloc.construct(&_begin[i], x._begin[i]);
         }
 
@@ -94,8 +92,7 @@ namespace ft
 
         size_type max_size() const {
         return (std::min((size_type) std::numeric_limits<difference_type>::max(),
-						std::numeric_limits<size_type>::max() / sizeof(value_type)));
-    }
+						std::numeric_limits<size_type>::max() / sizeof(value_type)));}
 
         size_type capacity() const { return _capacity; }
 
@@ -203,12 +200,15 @@ namespace ft
             _size++;
         }
 
+        // include for sleep function
+
         void pop_back()
         {
             if (_size == 0)
                 throw std::out_of_range("out of range");
             _alloc.destroy(&_begin[_size - 1]);
             _size--;
+            // big loop for sleep
         }
 
 		iterator insert (iterator position, const value_type& val) {
@@ -219,6 +219,8 @@ namespace ft
 		void insert (iterator position, size_type n, const value_type& val) {
 			iterator	it = end();
 			vector		tmp(position, it);
+            if (n + _size > _capacity * 2)
+                reserve(n + _size);
 			while (it != position){
 				pop_back();
 				it--;
@@ -233,29 +235,27 @@ namespace ft
 				it++;
 			}
 		}
-        // template<typename InputIterator>
-		// void insert (iterator position, InputIterator first, InputIterator last) {
-		// 	typedef typename ft::is_integer_my<InputIterator>::type_my _Integral;
-		// 	_insert(position, first, last, _Integral());
-		// }
+
 		template <class InputIterator>
     	void insert (iterator position, InputIterator first, InputIterator last,
 		typename ft::enable_if<!std::is_integral<InputIterator>::value>::type * = 0) {
-			iterator	it = end();
-			vector		tmp(position, it);
-			while (it != position){
-				pop_back();
-				it--;
-			}
-			while (first != last){
-				push_back(*first);
-				first++;
-			}
-			it = tmp.begin();
-			while (it != tmp.end()){
-				push_back(*it);
-				it++;
-			}
+            iterator	it = end();
+            vector tmp(position, it);
+            if ((last - first) + _size > _capacity * 2)
+                reserve((last-first) + _size);
+            while ( it != position)
+            {
+                pop_back();
+                it--;
+            }
+            for (; first != last;)
+                push_back(*first++);
+            it = tmp.begin();
+            for (; it != tmp.end();)
+            {
+                push_back(*it);
+                it++;
+            }
 		}
 
         iterator erase (iterator const &position) {

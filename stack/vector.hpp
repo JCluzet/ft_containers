@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/20 19:15:39 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/20 22:43:55 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,4 +332,52 @@ namespace ft
         size_type _size;
         size_type _capacity;
     };
+
+    template <class T, class Alloc>
+    bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+    {
+        if (lhs.size() != rhs.size())
+            return false;
+        for (size_t i = 0; i < lhs.size(); i++)
+            if (lhs[i] != rhs[i])
+                return false;
+        return true;
+    }
+    template <class T, class Alloc>
+    bool operator != (const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+    {
+        return !(lhs == rhs);
+    }
+    template <class T, class Alloc>
+    bool operator<(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+    {
+        if (lhs.size() < rhs.size())
+            return true;
+        else if (lhs.size() > rhs.size())
+            return false;
+        for (size_t i = 0; i < lhs.size(); i++)
+            if (lhs[i] < rhs[i])
+                return true;
+            else if (lhs[i] > rhs[i])
+                return false;
+        return false;
+    }
+    template <class T, class Alloc>
+    bool operator>(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+    {
+        return rhs < lhs;
+    }
+    template <class T, class Alloc>
+    bool operator<=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+    {
+        return !(lhs > rhs);
+    }
+    template <class T, class Alloc>
+    bool operator>=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+    {
+        return !(lhs < rhs);
+    }
+    
+    
+    
 }

@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/20 22:43:55 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/21 15:01:04 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,6 @@ namespace ft
                 throw std::out_of_range("out of range");
             _alloc.destroy(&_begin[_size - 1]);
             _size--;
-            // big loop for sleep
         }
 
 		iterator insert (iterator position, const value_type& val) {

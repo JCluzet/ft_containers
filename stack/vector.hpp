@@ -21,7 +21,6 @@ namespace ft
     {
     public:
         // --------------------------TYPEDEF------------------------------ //   ✅
-
         typedef T value_type;
         typedef Alloc allocator_type; // alloc use?
         typedef typename std::ptrdiff_t						difference_type;
@@ -172,33 +171,61 @@ namespace ft
             *this = vector(n, val);
         }
 
-        void push_back(const value_type &val)
-        {
-            size_type oldcap = 1;
-            if (_capacity >= _size + 1)
+        void push_back (const value_type& val)
+		{
+			if (_capacity == 0){
+				_capacity = 1;
+				_begin = _alloc.allocate(_capacity);
+				_alloc.construct(&_begin[0], val);
+				_size++;
+				return;
+			}
+			if (_capacity > _size)
             {
-                this->_alloc.construct(&this->_begin[_size], val);
+                _alloc.construct(&_begin[_size], val);
                 _size++;
                 return;
             }
-            if (this->_capacity > 0)
-            {
-                oldcap = _capacity;
-                this->_capacity = _capacity * 2;
-            }
-            else
-                this->_capacity = 1;
-            pointer tmp = this->_begin;
-            this->_begin = this->_alloc.allocate(oldcap);
-            for (size_type i = 0; i < this->_size; i++)
-            {
-                this->_alloc.construct(&this->_begin[i], tmp[i]);
-                this->_alloc.destroy(&tmp[i]);
-            }
-            this->_alloc.construct(&this->_begin[this->_size], val);
-            this->_alloc.deallocate(tmp, this->_capacity);
-            _size++;
-        }
+			_capacity *= 2;
+			pointer tmp = _alloc.allocate(_capacity);
+			for (size_type i = 0; i < _size; i++) {
+				_alloc.construct(&tmp[i], _begin[i]);
+				_alloc.destroy(&_begin[i]);
+			}
+			_alloc.deallocate(_begin, _capacity);
+			_begin = tmp;
+			_alloc.construct(&_begin[_size], val);
+			_size++;
+			return;
+		}
+
+        // void push_back(const value_type &val)
+        // {
+        //     size_type oldcap = 1;
+        //     if (_capacity >= _size + 1)
+        //     {
+        //         this->_alloc.construct(&this->_begin[_size], val);
+        //         _size++;
+        //         return;
+        //     }
+        //     if (this->_capacity > 0)
+        //     {
+        //         oldcap = _capacity;
+        //         this->_capacity = _capacity * 2;
+        //     }
+        //     else
+        //         this->_capacity = 1;
+        //     pointer tmp = this->_begin;
+        //     this->_begin = this->_alloc.allocate(oldcap);
+        //     for (size_type i = 0; i < this->_size; i++)
+        //     {
+        //         this->_alloc.construct(&this->_begin[i], tmp[i]);
+        //         this->_alloc.destroy(&tmp[i]);
+        //     }
+        //     this->_alloc.construct(&this->_begin[this->_size], val);
+        //     this->_alloc.deallocate(tmp, this->_capacity);
+        //     _size++;
+        // }
 
         // include for sleep function
 

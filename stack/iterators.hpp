@@ -29,6 +29,7 @@ namespace ft
         {
             _ptr = other._ptr;
         }
+        virtual ~vectiterator() {};
         vectiterator &operator=(const vectiterator &other)
         {
             _ptr = other._ptr;
@@ -80,7 +81,9 @@ namespace ft
         }
         bool operator>(const vectiterator &other) const
         {
-            return _ptr > other._ptr;
+            if (_ptr < other._ptr)
+                return false;
+            return true;
         }
         bool operator<=(const vectiterator &other) const
         {
@@ -98,7 +101,7 @@ namespace ft
         {
             return (a._ptr - b._ptr);
         }
-        friend bool 	operator> (const vectiterator& lhs, const vectiterator& rhs) { return lhs._ptr > rhs._ptr; }
+        // friend bool 	operator> (const vectiterator& lhs, const vectiterator& rhs) { return lhs._ptr > rhs._ptr; }
         T &operator*()
         {
             return *_ptr;

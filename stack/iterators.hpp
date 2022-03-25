@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 15:00:40 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/21 00:56:03 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/25 00:03:32 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,5 +106,33 @@ namespace ft
         {
             return *_ptr;
         }
+    };
+    	template <	class Category, class T, class not_const_T = T>
+	class map_iterator
+	{
+		public:
+			typedef typename T::value_type				value_type;
+			typedef typename not_const_T::Node			Node;
+			typedef typename T::key_type				key_type;
+			typedef typename T::mapped_type				mapped_type;
+			typedef	typename T::key_compare				key_compare;
+			typedef typename T::pointer   				pointer;
+			typedef typename T::reference 				reference;
+			typedef ptrdiff_t							difference_type;
+			typedef Category							iterator_category;
+
+			map_iterator() {}
+			map_iterator(const map_iterator<Category, not_const_T> &toCopy) : _begin(toCopy.base()), _end(toCopy.end()) {}
+			map_iterator(Node* node, Node* end) {
+				this->_begin = node;
+				this->_end = end;
+			}
+			virtual ~map_iterator() {}
+
+			Node*			base() const { return this->_ptr; }
+			Node*			end() const { return this->_end; }
+            private:
+                Node*		_begin;
+                Node*		_end;
     };
 }

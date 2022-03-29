@@ -76,6 +76,10 @@ namespace ft
         }
 
         size_type size(void) const { return _size; }
+        size_type max_size(void) const { return _allocNode.max_size(); }
+        bool empty(void) const { return _size == 0; }
+
+        key_compare key_comp(void) const { return _comp; }
 
         void insert(T key)
         {

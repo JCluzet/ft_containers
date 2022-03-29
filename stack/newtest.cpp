@@ -13,6 +13,7 @@ int main()
 
     // test size
     std::cout << "size: " << myMap2.size() << std::endl;
+    std::cout << "max_size: " << myMap2.max_size() << std::endl;
 
     // myMap2._tree.print2D();
 

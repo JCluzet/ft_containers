@@ -9,7 +9,12 @@ int main()
     ft::map<int, int> myMap2;
     
     // create a Tree
-    ft::Tree<int> myTree;
+    ft::Tree<int, int> myTree;
+
+    // test size
+    std::cout << "size: " << myMap2.size() << std::endl;
+
+    // myMap2._tree.print2D();
 
     while(1)
     {

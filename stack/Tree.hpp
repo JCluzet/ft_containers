@@ -4,12 +4,12 @@
 namespace ft
 {
 
-    template <class T, class Alloc = std::allocator<T>,
-    class Compare = std::less<T> >
+    template <class T, class Compare = std::less<typename T::first_type>, class Alloc = std::allocator<T> >
     class Tree
     {
     public:
         typedef	Compare						key_compare;
+        typedef size_t                      size_type;
         typedef Alloc allocator_type;
         typedef T value_type;
 
@@ -25,7 +25,7 @@ namespace ft
         ~Tree(void) {}
 
         Tree(const key_compare &comp = key_compare(),
-             const allocator_type &alloc = allocator_type()) : _comp(comp), _allocValue(alloc) { this->_root = 0; }
+             const allocator_type &alloc = allocator_type()) : _allocValue(alloc), _size(0), _comp(comp){ this->_root = 0; }
 
         Node *newNode(T key, Node *parent)
         {
@@ -34,6 +34,7 @@ namespace ft
             node->parent = parent;
             node->left = NULL;
             node->right = NULL;
+            _size++;
             return node;
         }
 
@@ -73,6 +74,8 @@ namespace ft
             }
             return node;
         }
+
+        size_type size(void) const { return _size; }
 
         void insert(T key)
         {
@@ -117,6 +120,7 @@ namespace ft
         allocator_type _allocValue;
         std::allocator<Node> _allocNode;
         Node *_root;
+        size_type _size;
         key_compare				_comp;
         Node *_lastNode;
     };

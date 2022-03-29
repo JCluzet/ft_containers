@@ -18,28 +18,20 @@ namespace ft
             value_type key;
             Node *left;
             Node *right;
-            // Node *parent;
+            Node *parent;
         };
 
-        Tree(void)
-        {
-            _root = NULL;
-        }
+
         ~Tree(void) {}
 
         Tree(const key_compare &comp = key_compare(),
-             const allocator_type &alloc = allocator_type()) : _comp(comp), _allocValue(alloc)
-        {
-            this->_root = 0;
-            // this->_end_node = this->_allocNode.allocate(1);
-            // this->set_end_node();
-        }
+             const allocator_type &alloc = allocator_type()) : _comp(comp), _allocValue(alloc) { this->_root = 0; }
 
         Node *newNode(T key, Node *parent)
         {
             Node *node = _allocNode.allocate(1);
             _allocValue.construct(&node->key, key);
-            // node->parent = parent;
+            node->parent = parent;
             node->left = NULL;
             node->right = NULL;
             return node;

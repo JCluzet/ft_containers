@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/29 16:19:55 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/29 17:51:16 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ namespace ft
         
 
         //             ----------------  Modifiers ----------------
-
+        // pair<iterator,bool> insert (const value_type& val);
 
         //            ----------------  Operations ----------------
 

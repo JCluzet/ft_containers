@@ -9,7 +9,8 @@ int main()
     ft::map<int, int> myMap2;
     
     // create a Tree
-    ft::Tree<int, int> myTree;
+    ft::pair<int, int> p1(1, 1);
+    ft::Tree<ft::pair<int, int> > myTree;
 
     // test size
     std::cout << "size: " << myMap2.size() << std::endl;
@@ -17,14 +18,19 @@ int main()
 
     // myMap2._tree.print2D();
 
+    unsigned int i = 0;
+
     while(1)
     {
-        std::cout << "Enter a number: ";
-        int number;
-        std::cin >> number;
-        myTree.insert(number);
+        // std::cout << "Enter a number: ";
+        p1.first = i;
+        p1.second = i;
+        // int number;
+        // std::cin >> number;
+        myTree.insert(p1);
         system("clear");
         myTree.print2D();
+        i++;
     }
 
     myMap.insert(std::pair<int, int>(1, 10));

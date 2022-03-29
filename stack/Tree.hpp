@@ -15,7 +15,9 @@ namespace ft
 
         struct Node
         {
-            value_type key;
+            // typename T::first_type key;
+            // typename T::second_type value;
+            value_type pair;
             Node *left;
             Node *right;
             Node *parent;
@@ -27,13 +29,14 @@ namespace ft
         Tree(const key_compare &comp = key_compare(),
              const allocator_type &alloc = allocator_type()) : _allocValue(alloc), _size(0), _comp(comp){ this->_root = 0; }
 
-        Node *newNode(T key, Node *parent)
+        Node *newNode(T pair, Node *parent)
         {
             Node *node = _allocNode.allocate(1);
-            _allocValue.construct(&node->key, key);
+            _allocValue.construct(&node->pair, pair);
             node->parent = parent;
             node->left = NULL;
             node->right = NULL;
+            // node->value = key.second;
             _size++;
             return node;
         }
@@ -50,25 +53,25 @@ namespace ft
         //         last = insert(key, _root);
         // }
 
-        Node *insert(T key, Node *node)
+        Node *insert(value_type pair, Node *node)
         {
-            if (key < node->key)
+            if (pair.first < node->pair.first)
             {
                 if (node->left != NULL)
-                    insert(key, node->left);
+                    insert(pair, node->left);
                 else
                 {
-                    node->left = newNode(key, node);
+                    node->left = newNode(pair, node);
                     return node->left;
                 }
             }
-            else if (key > node->key)
+            else if (pair.first > node->pair.first)
             {
                 if (node->right != NULL)
-                    insert(key, node->right);
+                    insert(pair, node->right);
                 else
                 {
-                    node->right = newNode(key, node);
+                    node->right = newNode(pair, node);
                     return node->right;
                 }
             }
@@ -81,16 +84,16 @@ namespace ft
 
         key_compare key_comp(void) const { return _comp; }
 
-        void insert(T key)
+        void insert(value_type pair)
         {
             Node *last;
             if (!_root)
             {
-                _root = newNode(key, NULL);
+                _root = newNode(pair, NULL);
                 last = _root;
             }
             else
-                last = insert(key, _root);
+                last = insert(pair, _root);
         }
 
         void print2DUtil(Node *root, int space)
@@ -110,7 +113,7 @@ namespace ft
             std::cout << std::endl;
             for (int i = 10; i < space; i++)
                 std::cout << " ";
-            std::cout << root->key << "\n";
+            std::cout << root->pair.first << "\n";
 
             // Process left child
             print2DUtil(root->left, space);

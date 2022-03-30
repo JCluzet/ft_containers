@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 15:00:40 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/25 00:03:32 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/30 18:27:50 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 namespace ft
 {
+	struct random_access_iterator_tag {};
+	struct bidirectional_iterator_tag {};
+	
     template <class T, class Distance = ptrdiff_t>
     class vectiterator
     {
@@ -107,7 +110,9 @@ namespace ft
             return *_ptr;
         }
     };
-    	template <	class Category, class T, class not_const_T = T>
+
+    
+    template < class Category, class T, class not_const_T = T>
 	class map_iterator
 	{
 		public:
@@ -120,16 +125,18 @@ namespace ft
 			typedef typename T::reference 				reference;
 			typedef ptrdiff_t							difference_type;
 			typedef Category							iterator_category;
-
+ 
 			map_iterator() {}
-			map_iterator(const map_iterator<Category, not_const_T> &toCopy) : _begin(toCopy.base()), _end(toCopy.end()) {}
+			// map_iterator(const map_iterator<Category, not_const_T> &toCopy) : _begin(toCopy.base()), _end(toCopy.end()) {}
 			map_iterator(Node* node, Node* end) {
 				this->_begin = node;
 				this->_end = end;
 			}
 			virtual ~map_iterator() {}
+            
+            reference   	operator*() const { return this->_begin->pair; }
 
-			Node*			base() const { return this->_ptr; }
+			// Node*			base() const { return this->_ptr; }
 			Node*			end() const { return this->_end; }
             private:
                 Node*		_begin;

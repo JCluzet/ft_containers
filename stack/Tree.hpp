@@ -1,5 +1,6 @@
 #include <memory>
 #include <iostream>
+#include "../utils/pair.hpp"
 
 namespace ft
 {
@@ -9,9 +10,14 @@ namespace ft
     {
     public:
         typedef	Compare						key_compare;
+        typedef typename T::first_type		key_type;
+        typedef typename T::second_type		mapped_type;
+
         typedef size_t                      size_type;
         typedef Alloc allocator_type;
         typedef T value_type;
+        typedef	value_type*					pointer;
+        typedef T& reference;
 
         struct Node
         {
@@ -21,11 +27,21 @@ namespace ft
             Node *parent;
         };
 
+        Node *minimum(Node *node)
+        {
+            if (node->left == nullptr)
+                return node;
+            return minimum(node->left);
+        }
+
 
         ~Tree(void) {}
 
         Tree(const key_compare &comp = key_compare(),
-             const allocator_type &alloc = allocator_type()) : _allocValue(alloc), _size(0), _comp(comp){ this->_root = 0; }
+             const allocator_type &alloc = allocator_type()) : _allocValue(alloc), _size(0), _comp(comp){ 
+                 this->_begin = 0;
+                 _lastNode = _allocNode.allocate(1);
+        }
 
         Node *newNode(T pair, Node *parent)
         {
@@ -63,6 +79,24 @@ namespace ft
             return node;
         }
 
+        // make find function 
+        Node *find(const typename T::first_type &key, Node *node)
+        {
+            if (node == NULL)
+                return NULL;
+            if (key < node->pair.first)
+                return find(key, node->left);
+            else if (key > node->pair.first)
+                return find(key, node->right);
+            else
+                return node;
+        }
+
+        Node *find(const typename T::first_type &key)
+        {
+            return find(key, this->_begin);
+        }
+
         size_type size(void) const { return _size; }
         size_type max_size(void) const { return _allocNode.max_size(); }
         bool empty(void) const { return _size == 0; }
@@ -72,13 +106,19 @@ namespace ft
         void insert(value_type pair)
         {
             Node *last;
-            if (!_root)
+            if (!_begin)
             {
-                _root = newNode(pair, NULL);
-                last = _root;
+                _begin = newNode(pair, NULL);
+                last = _begin;
             }
             else
-                last = insert(pair, _root);
+            {
+                // if the key of the pair is already in the tree, we don't insert it
+                if (find(pair.first, _begin) != NULL)
+                    return;
+                last = insert(pair, _begin);
+                set_end_node();
+            }
         }
 
         void print2DUtil(Node *root, int space)
@@ -93,19 +133,36 @@ namespace ft
             std::cout << std::endl;
             for (int i = 10; i < space; i++)
                 std::cout << " ";
-            std::cout << root->pair.first << "\n";
-
+            std::cout << root->pair.first << "::" << root->pair.second << "\n";
             print2DUtil(root->left, space);
         }
 
-        void print2D() { print2DUtil(_root, 0); }
+        Node *maximum(Node *node) const
+        {
+            if (node->right == NULL)
+                return node;
+            return maximum(node->right);
+        }
 
-        Node *root() { return _root; }
+        void			set_end_node() {
+	        if (_begin)
+	        	_lastNode->parent = maximum(_begin);
+	        else
+	        	_lastNode->parent = 0;
+	        _lastNode->right = 0;
+	        _lastNode->left = 0;
+	   	}
+
+        
+        void print2D() { print2DUtil(_begin, 0); }
+
+        Node *root() { return _begin; }
+        Node *_last() { return _lastNode; }
 
     private:
         allocator_type _allocValue;
         std::allocator<Node> _allocNode;
-        Node *_root;
+        Node *_begin;
         size_type _size;
         key_compare				_comp;
         Node *_lastNode;

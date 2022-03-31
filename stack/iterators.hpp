@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 15:00:40 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/30 18:27:50 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/30 23:46:27 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,11 @@ namespace ft
 
 			// Node*			base() const { return this->_ptr; }
 			Node*			end() const { return this->_end; }
+
+            bool operator!=(const map_iterator<Category, T, not_const_T> &other) const
+            {
+                return this->_begin != other._begin;
+            }
             private:
                 Node*		_begin;
                 Node*		_end;

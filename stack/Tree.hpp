@@ -25,6 +25,13 @@ namespace ft
             Node *left;
             Node *right;
             Node *parent;
+            Node *min()
+            {
+                Node *node = this;
+                while (node->left)
+                    node = node->left;
+                return node;
+            }
         };
 
         Node *minimum(Node *node)
@@ -34,8 +41,8 @@ namespace ft
             return minimum(node->left);
         }
 
-        ~Tree(void) {
-
+        ~Tree(void)
+        {
         }
 
         Tree(const key_compare &comp = key_compare(),
@@ -55,6 +62,7 @@ namespace ft
             _size++;
             return node;
         }
+        // key_compare		key_comp() const { return this->_comp; }
 
         // insert function
         void insert(value_type pair)
@@ -75,7 +83,7 @@ namespace ft
             }
         }
 
-        Node *insert(value_type pair, Node *node)
+        Node *insert(value_type pair, Node *node) // utiliser key_comp!!
         {
             if (pair.first < node->pair.first)
             {
@@ -125,7 +133,6 @@ namespace ft
         //     return *this;
         // }
 
-
         Node *find(const typename T::first_type &key)
         {
             return find(key, this->_begin);
@@ -139,15 +146,15 @@ namespace ft
         void clear(void)
         {
             // clear using destroyNode function
-            destroyNode(_begin); // ca en clear qu'un seul ! 
+            destroyNode(_begin); // ca en clear qu'un seul !
             _begin = NULL;
             _size = 0;
         }
 
         allocator_type get_allocator(void) const { return _allocNode; }
 
-            void
-            print2DUtil(Node *root, int space)
+        void
+        print2DUtil(Node *root, int space)
         {
             if (root == NULL)
                 return;
@@ -166,7 +173,7 @@ namespace ft
         void destroyNode(Node *node)
         {
             if (!node)
-                return ;
+                return;
             destroyNode(node->left);
             destroyNode(node->right);
             this->_allocValue.destroy(&node->pair);

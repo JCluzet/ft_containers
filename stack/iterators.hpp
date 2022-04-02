@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 15:00:40 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/30 23:46:27 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/02 01:42:44 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,8 +143,37 @@ namespace ft
             {
                 return this->_begin != other._begin;
             }
+            
+
+            map_iterator&   operator++()
+			{
+				// find the smallest greater
+				if (this->_begin->right)
+				{
+					this->_begin = this->_begin->right->min();
+					return *this;
+				}
+				else if (this->_begin->parent)
+				{
+					// find first previous greater node
+					key_type key = this->_begin->pair.first;
+					Node *tmp = this->_begin->parent;
+					while (tmp && this->_comp(tmp->pair.first, key))
+						tmp = tmp->parent;
+					if (tmp)
+					{
+						this->_begin = tmp;
+						return *this;
+					}
+				}
+				this->_begin = this->_end;
+				return *this;
+			}
+
+            map_iterator    operator++(int) { map_iterator tmp = *this; ++*this; return tmp; }
             private:
                 Node*		_begin;
                 Node*		_end;
+                key_compare _comp;
     };
 }

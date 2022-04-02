@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 14:39:20 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/29 14:49:36 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/03/30 17:20:12 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ namespace ft
             bool operator>(const pair &other) const { return (first > other.first || (first == other.first && second > other.second)); }
             bool operator<=(const pair &other) const { return !(*this > other); }
             bool operator>=(const pair &other) const { return !(*this < other); }
+            
+            // make_pair(const T &first, const U &second) : first(first), second(second) {}
         
         first_type first;
         second_type second;

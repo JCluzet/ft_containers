@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/01 00:17:20 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/02 02:02:24 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,10 @@ namespace ft
             _tree = x._tree;
         }
 
+        // ~map() // manque le destructeur de tree
+        // {
+        // }
+
         //              ----------------  Iterators ----------------
         iterator end() { return iterator(_tree._last(), _tree._last()); }
         iterator begin() { return iterator(_tree.root(), _tree._last()); }
@@ -94,6 +98,11 @@ namespace ft
 				ret.first = iterator(this->_tree.root(), this->_tree.root());
 				return ret;
 			}
+
+        // iterator insert (iterator position, const value_type& val)
+        // {
+        //     return iterator(_tree.insert(val,position.Node));
+        // }
 
         // iterator insert (iterator position, const value_type& val);
 

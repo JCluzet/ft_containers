@@ -85,7 +85,7 @@ namespace ft
 
         Node *insert(value_type pair, Node *node) // utiliser key_comp!!
         {
-            if (pair.first < node->pair.first)
+            if (_comp(pair.first, node->pair.first))
             {
                 if (node->left != NULL)
                     insert(pair, node->left);
@@ -95,7 +95,7 @@ namespace ft
                     return node->left;
                 }
             }
-            else if (pair.first > node->pair.first)
+            else
             {
                 if (node->right != NULL)
                     insert(pair, node->right);
@@ -113,9 +113,9 @@ namespace ft
         {
             if (node == NULL)
                 return NULL;
-            if (key < node->pair.first)
+            if (_comp(key, node->pair.first))
                 return find(key, node->left);
-            else if (key > node->pair.first)
+            else if (_comp(node->pair.first, key))
                 return find(key, node->right);
             else
                 return node;
@@ -142,6 +142,7 @@ namespace ft
         size_type max_size(void) const { return _allocNode.max_size(); }
         bool empty(void) const { return _size == 0; }
         key_compare key_comp(void) const { return _comp; }
+        // value_compare value_comp(void) const { return _comp; }
 
         void clear(void)
         {

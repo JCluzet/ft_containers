@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/02 02:02:24 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/02 17:03:57 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,8 @@ namespace ft
 
         // iterator insert (iterator position, const value_type& val)
         // {
-        //     return iterator(_tree.insert(val,position.Node));
+        //     (void)position;                        // TODO 
+        //     return iterator(_tree.insert(val));
         // }
 
         // iterator insert (iterator position, const value_type& val);
@@ -148,6 +149,10 @@ namespace ft
         {
             return _tree.key_comp();
         }
+        // value_compare value_comp() const
+        // {
+        //     return _tree.value_comp();
+        // }
         ~map() {}
     private:
         tree _tree;

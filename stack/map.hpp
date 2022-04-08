@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/02 17:03:57 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/04 18:25:25 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,11 @@ namespace ft
 				_tree.insert(val);
 				pair<iterator,bool> ret;
 				ret.second = (n != this->size());
-				ret.first = iterator(this->_tree.root(), this->_tree.root());
+                iterator it = find(val.first);
+                ret.first = it;
 				return ret;
 			}
+
 
         // iterator insert (iterator position, const value_type& val)
         // {
@@ -113,7 +115,7 @@ namespace ft
 
         // void erase (iterator position)
         // {
-        //     _tree.erase(position.node);
+        //     _tree.erase((*position).first);
         // }
 
         // size_type eralse (const key_type& k)l
@@ -134,6 +136,11 @@ namespace ft
             if (tmp)
                 return iterator(tmp, _tree._last());
             return end();
+        }
+
+        size_type count (const key_type& k) const
+        {
+            return _tree.count(k);
         }
         
         

@@ -62,6 +62,21 @@ namespace ft
             _size++;
             return node;
         }
+
+        size_type count(const key_type &key)
+        {
+            Node *node = this->root();
+            while (node)
+            {
+                if (_comp(key, node->pair.first))
+                    node = node->left;
+                else if (_comp(node->pair.first, key))
+                    node = node->right;
+                else
+                    return 1;
+            }
+            return 0;
+        }
         // key_compare		key_comp() const { return this->_comp; }
 
         // insert function
@@ -187,6 +202,10 @@ namespace ft
                 return node;
             return maximum(node->right);
         }
+
+        // void erase(map_iterator tab)
+
+
 
         void set_end_node()
         {

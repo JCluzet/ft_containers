@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/08 17:55:43 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/09 01:14:43 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,7 @@ namespace ft
                 insert(*first);
         }
 
-        map (const map& x)
-        {
-            _tree = x._tree;
-        }
-
-        // ~map() // manque le destructeur de tree
-        // {
-        // }
+        map (const map& x) : _tree(x._tree) { }
 
         //              ----------------  Iterators ----------------
         iterator end() { return iterator(_tree._last(), _tree._last()); }

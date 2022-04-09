@@ -6,9 +6,7 @@ rend
 
  Modifiers :
 
-erase
 clear
-swap
 
  Observers :
 
@@ -16,7 +14,6 @@ value_comp
 
  Operations :
 
-count
 lower_bound
 upper_bound
 equal_range

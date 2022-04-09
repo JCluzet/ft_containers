@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/09 01:14:43 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/09 21:17:03 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 namespace ft
 {
     template <class Key, class T, class Compare = std::less<Key>,
-              class Alloc = std::allocator<std::pair<const Key, T> > >
+              class Alloc = std::allocator<pair<const Key, T> > >
     class map
     {
 
@@ -85,7 +85,7 @@ namespace ft
         //              ----------------  Modifiers ---------------- 
         pair<iterator,bool>		insert(const value_type& val) {
 				size_type n = this->size();
-				_tree.insert(val);
+				_tree.insert(val);                   // ICI 2
 				pair<iterator,bool> ret;
 				ret.second = (n != this->size());
 				ret.first = iterator(this->_tree.find(val.first), this->_tree._last());
@@ -99,6 +99,27 @@ namespace ft
 			pair<iterator,bool> ret;
             ret.first = iterator(this->_tree.find(val.first), this->_tree._last());
             return ret.first;
+        }
+
+        void erase(iterator position) { _tree.erase((*position).first); }
+
+        void clear() { _tree.clear(); }
+        // void clear
+
+        iterator lower_bound(const key_type& k)
+        {
+            return iterator(_tree.lower_bound(k), _tree._last());
+        }
+
+        void swap(map& x)
+        {
+            // call constructor copy of tree
+            _tree.swap(x._tree);
+        }
+
+        size_type count (const key_type& k) const
+        {
+            return _tree.count(k);
         }
 
         template <class InputIterator>

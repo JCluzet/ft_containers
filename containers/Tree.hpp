@@ -5,19 +5,27 @@
 
 namespace ft
 {
-template <class T, class Compare = std::less<typename T::first_type>, class Alloc = std::allocator<T> >
-class Tree
+    template <class T, class Compare = std::less<typename T::first_type>, class Alloc = std::allocator<T> >
+    class Tree
     {
     public:
+        // ---------------------------------------------------------------------
+        //                                TypeDEF
+        // ---------------------------------------------------------------------
+
         typedef Alloc allocator_type;
         typedef T value_type;
         typedef typename T::first_type key_type;
         typedef typename T::second_type mapped_type;
-        typedef Compare            key_compare;
+        typedef Compare key_compare;
         typedef ptrdiff_t difference_type;
         typedef size_t size_type;
-        typedef T&                      reference;
-        typedef T*                      pointer;
+        typedef T &reference;
+        typedef T *pointer;
+
+        // ---------------------------------------------------------------------
+        //                                NODE
+        // ---------------------------------------------------------------------
 
         struct Node
         {
@@ -27,91 +35,115 @@ class Tree
             Node *right;
             difference_type height;
 
-            Node*	min() {
-				Node* node = this;
-				while (node->left)
-					node = node->left;
-				return node;
-			}
-			
-			Node*	max() {
-				Node* node = this;
-				while (node->right)
-					node = node->right;
-				return node;
-			}
+            Node *min()
+            {
+                Node *node = this;
+                while (node->left)
+                    node = node->left;
+                return node;
+            }
+
+            Node *max()
+            {
+                Node *node = this;
+                while (node->right)
+                    node = node->right;
+                return node;
+            }
         };
+
+        // ---------------------------------------------------------------------
+        //                                CONSTRUCTOR
+        // ---------------------------------------------------------------------
 
         Tree(void)
         {
             _root = NULL;
             _size = 0;
             _end_node = _allocNode.allocate(1);
-            // _comp = ;
             set_end_node();
         }
 
-        Tree(const key_compare& comp = key_compare(),
-	    const allocator_type& alloc = allocator_type())
-        :_allocValue(alloc),  _comp(comp){
-				_root = NULL;
-                _size = 0;
-				_end_node = _allocNode.allocate(1);
-				set_end_node();
-		}
-
-        Tree(const Tree& x)
-        :_allocValue(x._allocValue), _comp(x._comp)
+        Tree(const key_compare &comp = key_compare(),
+             const allocator_type &alloc = allocator_type())
+            : _allocValue(alloc), _comp(comp)
         {
             _root = NULL;
             _size = 0;
             _end_node = _allocNode.allocate(1);
             set_end_node();
-            copy(x._root);
         }
 
-        void copy(Node* node)
+        Tree(const Tree &x)
+            : _allocValue(x._allocValue), _comp(x._comp)
+        {
+            *this = x;
+        }
+
+        // ---------------------------------------------------------------------
+        //                                OPERATORS=
+        // ---------------------------------------------------------------------
+
+        Tree &operator=(const Tree &x)
+        {
+            _root = x._root;
+            _size = 0;
+            _end_node = _allocNode.allocate(1);
+            set_end_node();
+            copy(x._root);
+            return *this;
+        }
+
+        void copy(Node *node)
         {
             if (node)
             {
+                // std::cout << "HEY" << std::endl;
                 insert(node->pair);
                 copy(node->left);
                 copy(node->right);
             }
         }
 
-        ~Tree(void) {
+        // ---------------------------------------------------------------------
+        //                                DESTRUCTOR
+        // ---------------------------------------------------------------------
+
+        ~Tree(void)
+        {
             _allocNode.deallocate(_end_node, 1);
         }
 
-        size_type size(void) const
+        // ---------------------------------------------------------------------
+        //                                CAPACITY
+        // ---------------------------------------------------------------------
+
+        size_type size(void) const { return _size; }
+
+        bool empty(void) const { return _size == 0; }
+
+        size_type max_size() const { return _allocNode.max_size(); }
+
+        // ---------------------------------------------------------------------
+        //                                MODIFIERS
+        // ---------------------------------------------------------------------
+
+        void insert(value_type pair) { _root = insert(_root, pair); } // ICI 3
+
+        void erase(key_type key)
         {
-            return _size;
+            if (getNode(_root, key))
+                _root = erase(_root, key);
         }
 
-        bool empty(void) const
+        void swap(Tree &x)
         {
-            return _size == 0;
+            Node *sw = _root;
+            _root = x._root;
+            x._root = sw;
         }
 
-        size_type max_size() const
-        {
-            return _allocNode.max_size();
-        }
-        
-        difference_type height(Node *node) const{
-            if (node == NULL)
-                return 0;
-            return node->height;
-        }
-            // VersAVL Ajouter un nouvel élément(key, value)
-        void insert(value_type pair)
-        {
-            _root = insert(_root, pair);
-        }
-
-        key_compare key_comp() const
-            { return _comp; }
+        key_compare key_comp() const { return _comp; }
 
         void print2D(void)
         {
@@ -129,28 +161,42 @@ class Tree
             {
                 print_tree(root->left, lvl + 1);
                 padding('\t', lvl);
-                std::cout << root->pair.first << ":" << root->pair.second << ";" ;
+                std::cout << root->pair.first << ":" << root->pair.second << ";";
                 if (root->parent)
                     std::cout << root->parent->pair.second;
                 else
-                    std::cout <<  "NULL";
-                std::cout  << std::endl;
+                    std::cout << "NULL";
+                std::cout << std::endl;
                 print_tree(root->right, lvl + 1);
             }
             std::cout << std::endl;
         }
 
-        Node *root() const
-            { return _root; }
+        Node *root() const { return _root; }
+        Node *_last() const { return _end_node; }
 
-        Node *find(key_type k) const 
-            { return getNode(_root, k); }
+        // ---------------------------------------------------------------------
+        //                                Operations
+        // ---------------------------------------------------------------------
 
-        Node *_last() const
-            { return _end_node; }
+        Node *find(key_type k) const
+        {
+            return getNode(_root, k);
+        }
 
-        bool contains(key_type key) const
-            { return getNode(_root, key) != NULL; }
+        size_type count(const key_type key) const
+        {
+            return getNode(_root, key) != NULL;
+        }
+
+        // iterator lower_bound(const key_type k)
+        // {
+        //     Node *node = getNode(_root, k);
+        //     if (node)
+        //         return iterator(node);
+        //     else
+        //         return iterator(_end_node);
+        // }
 
         mapped_type get(key_type key)
         {
@@ -158,7 +204,6 @@ class Tree
             return node == NULL ? NULL : node->pair.second;
         }
 
-        // Retour ànodePour la racineAVL Le noeud où se trouve la valeur minimale de
         Node *minimum(Node *node)
         {
             if (node->left == NULL)
@@ -173,113 +218,73 @@ class Tree
             return maximum(node->right);
         }
 
-        // Retour ànodePour la racineAVL Le noeud où se trouve la valeur maximale de // DeAVL La clé de suppression est keyNode of
-        void remove(key_type key)
+        void clear()
         {
-            if (getNode(_root, key))
-                _root = remove(_root, key);
+            for (unsigned int i = 0; i < _size; i++)
+                erase(_root->pair.first);
+            this->_root = 0;
+            this->set_end_node();
         }
 
-        // Tree &operator=(const Tree &tree)
-        // {
-        //     _root = tree._root;
-        //     _size = tree._size;
-        //     return *this;
-        // }
-
-    private :
-
-        allocator_type _allocValue;
-        std::allocator<Node> _allocNode;
-        Node *_root;
-        Node *_end_node;
-        size_type _size;
-        key_compare _comp;
-
-         Node *remove(Node *node, key_type key)
+    private:
+        Node *erase(Node *node, key_type key)
         {
             if (node == NULL)
                 return NULL;
-            Node *retNode;
-            if (key < node->pair.first)
-            {
-                node->left = remove(node->left, key);
-                retNode = node;
-            }
-            else if (key > node->pair.first)
-            {
-                node->right = remove(node->right, key);
-                retNode = node;
-            }
+            else if (_comp(key, node->pair.first))
+                node->left = erase(node->left, key);
+            else if (_comp(node->pair.first, key))
+                node->right = erase(node->right, key);
             else
-            { // key.compareTo(node.key) == 0
-
-                //  Si le Sous - arbre gauche du noeud à supprimer est vide
-                if (node->left == NULL)
+            {
+                if (!node->left || !node->right)
                 {
-                    Node *rightNode = node->right;
-                    // node.right = NULL;
-                    if (node->right){
-                        _allocValue.destroy(&node->right->pair);
-                        _allocNode.deallocate(node->right, 1);
-                    }
-                    _size--;
-                    retNode = rightNode;
-                }
-                else if (node->right == NULL)
-                { //  Si le Sous - arbre droit du noeud à supprimer est vide
-                    Node *leftNode = node->left;
-                    // node.left = NULL;
-                    _allocValue.destroy(&node->left->pair);
-                    _allocNode.deallocate(node->left, 1);
-                    _size--;
-                    retNode = leftNode;
+                    Node *tmp = node;
+                    node = node->left ? node->left : node->right;
+                    if (node)
+                        node->parent = tmp->parent;
+                    _allocValue.destroy(&tmp->pair);
+                    _allocNode.deallocate(tmp, 1);
                 }
                 else
                 {
-                    //  Les sous - arbres gauche et droit du noeud à supprimer ne sont pas vides
-
-                    //  Trouver le plus petit noeud plus grand que le noeud à supprimer ,  C'est - à - dire le plus petit noeud du sous - arbre droit du noeud à supprimer
-                    //  Remplacer le noeud à supprimer par ce noeud
-                    Node *successor = minimum(node->right);
-                    successor->right = remove(node->right, successor->pair.first);
-                    successor->left = node->left;
-
-                    // node.left = node.right = NULL;
-                    _allocValue.destroy(&node->left->pair);
-                    _allocNode.deallocate(node->left, 1);
-                    _allocValue.destroy(&node->right->pair);
-                    _allocNode.deallocate(node->right, 1);
-
-                    retNode = successor;
+                    Node *tmp = minimum(node->right);
+                    if (tmp != node->right)
+                    {
+                        tmp->right = node->right;
+                        node->right->parent = tmp;
+                    }
+                    if (tmp != node->left)
+                    {
+                        tmp->left = node->left;
+                        node->left->parent = tmp;
+                    }
+                    tmp->parent->left = NULL;
+                    tmp->parent = node->parent;
+                    _allocValue.destroy(&node->pair);
+                    _allocNode.deallocate(node, 1);
+                    node = tmp;
                 }
+                _size--;
             }
-            if (retNode == NULL)
+            if (!node)
                 return NULL;
-            // Mise à jourheight
-            retNode->height = 1 + std::max(height(node->left), height(node->right));
-            // Calculer le facteur d'équilibre
-            difference_type balanceFactor = getBalanceFactor(retNode);
-            //  Entretien équilibré
-            if (balanceFactor > 1 && getBalanceFactor(retNode->left) >= 0)
+            difference_type bf = getBalanceFactor(node);
+            if (bf < -1 && getBalanceFactor(node->left) <= 0)
+                return rightRotate(node);
+            if (bf > 1 && getBalanceFactor(node->right) >= 0)
+                return leftRotate(node);
+            if (bf < -1 && getBalanceFactor(node->left) > 0)
             {
-                return rightRotate(retNode);
+                node->left = leftRotate(node->left);
+                return rightRotate(node);
             }
-            if (balanceFactor < -1 && getBalanceFactor(retNode->right) <= 0)
+            if (bf > 1 && getBalanceFactor(node->right) < 0)
             {
-                return leftRotate(retNode);
+                node->right = rightRotate(node->right);
+                return leftRotate(node);
             }
-            if (balanceFactor > 1 && getBalanceFactor(retNode->left) < 0)
-            {
-                retNode->left = leftRotate(retNode->left);
-                return rightRotate(retNode);
-            }
-            if (balanceFactor < -1 && getBalanceFactor(retNode->right) > 0)
-            {
-                retNode->right = rightRotate(retNode->right);
-                return leftRotate(retNode);
-            }
-            return retNode;
+            return node;
         }
 
         difference_type getBalanceFactor(Node *node)
@@ -299,25 +304,32 @@ class Tree
          *       / \
          *      T1 T2
          */
-        Node* rightRotate(Node* y)
+        Node *rightRotate(Node *y)
         {
 
-            Node* x = y->left;
-            Node* T3 = x->right;
+            Node *x = y->left;
+            Node *T3 = x->right;
 
             //  Processus de rotation à droite
             x->right = y;
             y->left = T3;
-                if (T3)
-            T3->parent = y;
-                if (x)
-            x->parent = y->parent;
-                if (y)
-            y->parent = x;
+            if (T3)
+                T3->parent = y;
+            if (x)
+                x->parent = y->parent;
+            if (y)
+                y->parent = x;
             // Mise à jourheight
             y->height = height(y->left) > height(y->right) ? height(y->left) + 1 : height(y->right) + 1;
             x->height = height(x->left) > height(x->right) ? height(x->left) + 1 : height(x->right) + 1;
             return x;
+        }
+
+        difference_type height(Node *node) const
+        {
+            if (node == NULL)
+                return 0;
+            return node->height;
         }
         /**
          * Paire de noeuds y Faire tourner à gauche , Retour au nouveau noeud racine après rotation x
@@ -329,18 +341,18 @@ class Tree
          *          /  \
          *         T3  T4
          */
-        Node* leftRotate(Node* y)
+        Node *leftRotate(Node *y)
         {
-            Node* x = y->right;
-            Node* T2 = x->left;
+            Node *x = y->right;
+            Node *T2 = x->left; // ICI 5
             //  Processus de rotation à gauche
             x->left = y;
             y->right = T2;
-            if(T2)
+            if (T2)
                 T2->parent = y;
-            if(x)
+            if (x)
                 x->parent = y->parent;
-            if(y)
+            if (y)
                 y->parent = x;
             // Mise à jourheight
             y->height = height(y->left) > height(y->right) ? height(y->left) + 1 : height(y->right) + 1;
@@ -360,7 +372,6 @@ class Tree
                 return getNode(node->right, key);
         }
 
-
         Node *newNode(value_type pair, Node *parent)
         {
             Node *node = _allocNode.allocate(1);
@@ -377,20 +388,21 @@ class Tree
                 std::cout << c;
         }
 
-
-        void			set_end_node() {
-        if (_root)
-        	_end_node->parent = maximum(_root);
-        else
-        	_end_node->parent = 0;
-        _end_node->right = 0;
-        _end_node->left = 0;
-   	    }
+        void set_end_node()
+        {
+            if (_root)
+                _end_node->parent = maximum(_root);
+            else
+                _end_node->parent = 0;
+            _end_node->right = 0;
+            _end_node->left = 0;
+        }
         // Xiang YinodePour la racineAVLInsérer un élément dans(key, value),Algorithme récursif
         //  Retour après l'insertion d'un nouveau noeud AVLRacine de
-        Node* insert(Node *node, value_type pair, Node *parent = NULL)
+        Node *insert(Node *node, value_type pair, Node *parent = NULL)
         {
-            if (node == NULL) {
+            if (node == NULL)
+            {
                 _size++;
                 return newNode(pair, parent);
             }
@@ -408,17 +420,21 @@ class Tree
             // Calculer le facteur d'équilibre
             difference_type balanceFactor = getBalanceFactor(node);
             //  Entretien équilibré
-            if (balanceFactor > 1 && getBalanceFactor(node->left) >= 0) {
+            if (balanceFactor > 1 && getBalanceFactor(node->left) >= 0)
+            {
                 return rightRotate(node);
             }
-            if (balanceFactor < -1 && getBalanceFactor(node->right) <= 0) {
-                return leftRotate(node);
+            if (balanceFactor < -1 && getBalanceFactor(node->right) <= 0)
+            {
+                return leftRotate(node); // ICI 4
             }
-            if (balanceFactor > 1 && getBalanceFactor(node->left) < 0) {
+            if (balanceFactor > 1 && getBalanceFactor(node->left) < 0)
+            {
                 node->left = leftRotate(node->left);
                 return rightRotate(node);
             }
-            if (balanceFactor < -1 && getBalanceFactor(node->right) > 0) {
+            if (balanceFactor < -1 && getBalanceFactor(node->right) > 0)
+            {
                 node->right = rightRotate(node->right);
                 return leftRotate(node);
             }
@@ -426,5 +442,11 @@ class Tree
             return node;
         }
 
+        allocator_type _allocValue;
+        std::allocator<Node> _allocNode;
+        Node *_root;
+        Node *_end_node;
+        size_type _size;
+        key_compare _comp;
     };
 }

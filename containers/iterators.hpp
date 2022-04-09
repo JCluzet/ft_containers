@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 15:00:40 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/02 01:42:44 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/09 17:27:53 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,10 @@ namespace ft
         {
             return *_ptr;
         }
+        T *operator->()
+        {
+            return &(operator*)();
+        }
     };
 
     
@@ -143,6 +147,18 @@ namespace ft
             {
                 return this->_begin != other._begin;
             }
+
+            pointer operator->() const
+            {
+                return &(operator*)();
+            }
+
+            // map_iterator& operator--(int)
+            // {
+            //     map_iterator tmp(*this);
+                
+            //     return tmp;
+            // }
             
 
             map_iterator&   operator++()

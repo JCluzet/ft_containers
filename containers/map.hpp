@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/09 21:17:03 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/12 01:03:28 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ namespace ft
         
         //              ----------------  Capacity ----------------
         size_type size() const { return _tree.size(); }
-        size_type max_size() const { return _tree.max_size(); }
-        bool empty() const { return _tree.empty(); }
+        // size_type max_size() const { return _tree.max_size(); }
+        bool empty() const { return _tree.size() == 0; }
 
         //              ----------------  Element access ----------------  ✅
         mapped_type& operator[] (const key_type& k)
@@ -101,7 +101,7 @@ namespace ft
             return ret.first;
         }
 
-        void erase(iterator position) { _tree.erase((*position).first); }
+        void erase(iterator position) { _tree.deleteNode((*position)); }
 
         void clear() { _tree.clear(); }
         // void clear

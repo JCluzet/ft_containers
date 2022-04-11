@@ -1,0 +1,12 @@
+# color define 
+red='\033[0;31m'
+green='\033[0;32m'
+white='\033[0;37m'
+
+# execute the argument as a command in the container
+while [ 1 ]; do
+    printf "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+    "$@" > .out 2>&1
+    output1=$(cat .out | tail -n 1 | cut -c -2)
+    printf "$white[%s] -> $red%s ERRORS$white" "$(date)" "$output1"
+done

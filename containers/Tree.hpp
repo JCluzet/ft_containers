@@ -152,6 +152,7 @@ namespace ft
                     NodePtr temp = minimum(node->right);
                     node->pair = temp->pair;
                     node->right = deleteNodeHelper(node->right, temp->pair);
+                    _size--;
                 }
             }
             return node;
@@ -226,14 +227,19 @@ namespace ft
             return _size;
         }
 
+        size_type max_size() const
+        {
+            return _allocNode.max_size();
+        }
+
         Tree(const key_compare &comp = key_compare(),
              const allocator_type &alloc = allocator_type())
             : _allocValue(alloc), _comp(comp)
         {
             _root = NULL;
             _size = 0;
-            // _end_node = _allocNode.allocate(1);
-            // set_end_node();
+            _end_node = _allocNode.allocate(1);
+            set_end_node();
         }
 
         // Pre-Order traversal
@@ -312,6 +318,8 @@ namespace ft
             }
             return y;
         }
+
+        // key_compare key_comp() const { return _comp; }
 
 
         void set_end_node(void)
@@ -408,6 +416,10 @@ namespace ft
         {
             // PART 1: Ordinary BST insert
             // NodePtr node = new Node;
+            if(find(key.first) != nullptr)
+            {
+                return;
+            }
             NodePtr node = _allocNode.allocate(1);
             node->parent = nullptr;
             node->left = nullptr;
@@ -418,6 +430,10 @@ namespace ft
             node->bf = 0;
             NodePtr y = nullptr;
             NodePtr x = this->_root;
+            // for (unsigned int i = 0; i < 1000000; i++)
+            // {
+
+            // }
 
             while (x != nullptr)
             {
@@ -449,6 +465,7 @@ namespace ft
 
             // PART 2: re-balance the node if necessary
             updateBalance(node);
+            set_end_node();
         }
 
         NodePtr root() { return this->_root; }
@@ -456,9 +473,10 @@ namespace ft
         // delete the node from the tree
 
 
-        NodePtr deleteNode(value_type *pair)
+        NodePtr deleteNode(value_type pair)
         {
-            NodePtr deletedNode = deleteNodeHelper(this->_root, *pair);
+            NodePtr deletedNode = deleteNodeHelper(this->_root, pair);
+            set_end_node();
             return deletedNode;
         }
 

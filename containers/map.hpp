@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/12 01:03:28 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/12 02:03:51 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 namespace ft
 {
     template <class Key, class T, class Compare = std::less<Key>,
-              class Alloc = std::allocator<pair<const Key, T> > >
+              class Alloc = std::allocator<pair<Key, T> > >
     class map
     {
 
@@ -28,7 +28,7 @@ namespace ft
     //                ----------------  TypeDEF ----------------
         typedef Key                                         key_type;
         typedef T                                           mapped_type;
-        typedef ft::pair<const key_type,mapped_type>            value_type;
+        typedef ft::pair<key_type,mapped_type>            value_type;
         typedef	Compare										key_compare;
         //typedef ???                                       value_compare;
         typedef	Alloc										allocator_type;
@@ -66,7 +66,7 @@ namespace ft
         
         //              ----------------  Capacity ----------------
         size_type size() const { return _tree.size(); }
-        // size_type max_size() const { return _tree.max_size(); }
+        size_type max_size() const { return _tree.max_size(); }
         bool empty() const { return _tree.size() == 0; }
 
         //              ----------------  Element access ----------------  ✅
@@ -101,7 +101,7 @@ namespace ft
             return ret.first;
         }
 
-        void erase(iterator position) { _tree.deleteNode((*position)); }
+        void erase(iterator position) { _tree.deleteNode(*position); }
 
         void clear() { _tree.clear(); }
         // void clear
@@ -167,12 +167,12 @@ namespace ft
         }
 
         //         ----------------  Allocator ----------------
-        allocator_type get_allocator() const { return _tree.get_allocator(); }
+        // allocator_type get_allocator() const { return _tree.get_allocator(); }
         
-        key_compare key_comp() const
-        {
-            return _tree.key_comp();
-        }
+        // key_compare key_comp() const
+        // {
+        //     return _tree.key_comp();
+        // }
         // value_compare value_comp() const
         // {
         //     return _tree.value_comp();

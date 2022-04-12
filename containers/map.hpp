@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/12 02:03:51 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/12 04:05:34 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,13 @@ namespace ft
         map (const map& x) : _tree(x._tree) { }
 
         //              ----------------  Iterators ----------------
-        iterator end() { return iterator(_tree._last(), _tree._last()); }
-        iterator begin() { return iterator(_tree.root(), _tree._last()); }
+        // iterator end() { return iterator(_tree._last(), _tree._last()); }
+        iterator begin()
+            { return iterator(_tree.minimum(_tree.root()), _tree._last()); }
+
+        iterator end() 
+            { return iterator(_tree._last(), _tree._last()); }
+        
         
         //              ----------------  Capacity ----------------
         size_type size() const { return _tree.size(); }

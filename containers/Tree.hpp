@@ -272,7 +272,7 @@ namespace ft
         }
 
 
-        // NodePtr searchTree(value_type k)
+        // NodePtr searchTree(end_nodvalue_type k)
         // {
         //     return searchTreeHelper(this->_root, k);
         // }

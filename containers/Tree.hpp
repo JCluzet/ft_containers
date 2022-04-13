@@ -27,7 +27,15 @@ namespace ft
             Node *parent;    // pointer to the parent
             Node *left;      // pointer to left child
             Node *right;     // pointer to right child
-            int bf;          // balance factor of the node
+            // Node *next;      // pointer to next node in the list
+            int bf; // balance factor of the node
+
+            				Node*	getParent() {
+					Node* node = this;
+					while (node->parent)
+						node = node->parent;
+					return node;
+				}
 
             Node *min()
             {
@@ -36,9 +44,54 @@ namespace ft
                     cur = cur->left;
                 return cur;
             }
+
+            Node *max()
+            {
+                Node *cur = this;
+                while (cur->right != nullptr)
+                    cur = cur->right;
+                return cur;
+            }
         };
 
+        void swap(Tree &other)
+        {
+				Node* tmp = this->_root;
+				this->_root = other._root;
+				other._root = tmp;
+        }
+
         typedef Node *NodePtr;
+
+        size_type count(const key_type &key) const
+        {
+            NodePtr cur = _root;
+            while (cur != nullptr)
+            {
+                if (_comp(key, cur->pair.first))
+                    cur = cur->left;
+                else if (_comp(cur->pair.first, key))
+                    cur = cur->right;
+                else
+                    return 1;
+            }
+            return 0;
+        }
+
+        void clear()
+        {
+            _size = 0;
+            _root = 0;
+            set_end_node();
+            
+        }
+
+        // void clear()
+        // {
+        //     for (iteratorit=begin
+        //     // this->set_end_node();
+        //     this->_end_node->parent = 0;
+        // }
 
     private:
         NodePtr _root;
@@ -57,6 +110,16 @@ namespace ft
             node->right = nullptr;
             node->bf = 0;
         }
+
+        // void clear(NodePtr node)
+        // {
+        //     if (node == nullptr)
+        //         return;
+        //     clear(node->left);
+        //     clear(node->right);
+        //     _allocNode.destroy(node);
+        //     _allocNode.deallocate(node, 1);
+        // }
 
         void preOrderHelper(NodePtr node)
         {
@@ -77,6 +140,16 @@ namespace ft
                 inOrderHelper(node->right);
             }
         }
+
+        // void set_nester(NodePtr node)
+        // {
+        //     if (node != nullptr)
+        //     {
+        //         set_nester(node->left);
+        //         set_nester(node->right);
+        //         node->next = node->max();
+        //     }
+        // }
 
         void postOrderHelper(NodePtr node)
         {
@@ -104,6 +177,11 @@ namespace ft
 
         NodePtr deleteNodeHelper(NodePtr node, value_type key)
         {
+
+            if (_size == 0)
+            {
+                return nullptr;
+            }
             // search the key
             if (node == nullptr)
                 return node;
@@ -123,6 +201,10 @@ namespace ft
                     _allocNode.deallocate(node, 1);
                     _size--;
                     node = nullptr;
+                    // set_end_node();
+                    // printf("case 1\n");
+                    // set_nester(node);
+                    // node = nullptr;
                 }
 
                 // case 2: node has only one child
@@ -134,6 +216,10 @@ namespace ft
                     _allocValue.destroy(&temp->pair);
                     _allocNode.deallocate(temp, 1);
                     _size--;
+                    node = nullptr;
+                    // set_end_node();
+                    // printf("case 2\n");
+                    // set_nester(node);
                 }
 
                 else if (node->right == nullptr)
@@ -144,6 +230,10 @@ namespace ft
                     _allocValue.destroy(&temp->pair);
                     _allocNode.deallocate(temp, 1);
                     _size--;
+                    node = nullptr;
+                    // set_end_node();
+                    // printf("case 3\n");
+                    // set_nester(node);
                 }
 
                 // case 3: has both children
@@ -152,7 +242,9 @@ namespace ft
                     NodePtr temp = minimum(node->right);
                     node->pair = temp->pair;
                     node->right = deleteNodeHelper(node->right, temp->pair);
-                    _size--;
+                    // printf("case 4\n");
+                    // _size--;
+                    // set_end_node();
                 }
             }
             return node;
@@ -232,12 +324,18 @@ namespace ft
             return _allocNode.max_size();
         }
 
+        // Tree()
+        // {
+        //     _root = nullptr;
+        //     _size = 0;
+        // }
+
         Tree(const key_compare &comp = key_compare(),
              const allocator_type &alloc = allocator_type())
             : _allocValue(alloc), _comp(comp)
         {
-            _root = NULL;
             _size = 0;
+            _root = 0;
             _end_node = _allocNode.allocate(1);
             set_end_node();
         }
@@ -270,7 +368,6 @@ namespace ft
         {
             return searchTreeHelper(this->_root, k);
         }
-
 
         // NodePtr searchTree(end_nodvalue_type k)
         // {
@@ -321,12 +418,16 @@ namespace ft
 
         // key_compare key_comp() const { return _comp; }
 
-
-        void set_end_node(void)
-        {
-            _end_node->parent = _root ? maximum(root()) : nullptr;
-            _end_node->left = _end_node->right = nullptr;
-        }
+			void			set_end_node() {
+				if (this->_root)
+					this->_end_node->parent = this->_root->max();
+				else
+					this->_end_node->parent = 0;
+				this->_end_node->right = 0;
+				this->_end_node->left = 0;
+                // prettyPrint();
+                // std::cout << "endnode: " << this->_end_node->pair.first << std::endl;
+			}
 
         NodePtr _last(void) const { return _end_node; }
 
@@ -412,11 +513,11 @@ namespace ft
         }
 
         // insert the key to the tree in its appropriate position
-        void insert(value_type key)
+        void insert(value_type pair)
         {
             // PART 1: Ordinary BST insert
             // NodePtr node = new Node;
-            if(find(key.first) != nullptr)
+            if (find(pair.first) != nullptr)
             {
                 return;
             }
@@ -425,7 +526,7 @@ namespace ft
             node->left = nullptr;
             node->right = nullptr;
             // node->pair = key;
-            _allocValue.construct(&node->pair, key);
+            _allocValue.construct(&node->pair, pair);
             _size++;
             node->bf = 0;
             NodePtr y = nullptr;
@@ -465,6 +566,7 @@ namespace ft
 
             // PART 2: re-balance the node if necessary
             updateBalance(node);
+            // set_nester(node);
             set_end_node();
         }
 
@@ -472,11 +574,10 @@ namespace ft
 
         // delete the node from the tree
 
-
         NodePtr deleteNode(value_type pair)
         {
             NodePtr deletedNode = deleteNodeHelper(this->_root, pair);
-            set_end_node();
+            // set_end_node();
             return deletedNode;
         }
 

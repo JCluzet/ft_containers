@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/13 02:22:40 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/13 17:52:29 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ namespace ft
         {
             size_type n = this->size();
             // iterator it = find(k);
-            _tree.deleteNode(ft::make_pair(k, mapped_type()));
+            _tree.deleteNode(make_pair(k, mapped_type()));
             return (n != this->size());
         }
 

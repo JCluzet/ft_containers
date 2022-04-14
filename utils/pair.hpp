@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 14:39:20 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/14 03:19:04 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/14 14:21:26 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,8 @@ namespace ft
         first_type first;
         second_type second;
     };
+
+    template <class T1, class T2>
+ft::pair<T1, T2>	make_pair(T1 x, T2 y) { return ft::pair<T1, T2>(x, y); }
 
 }

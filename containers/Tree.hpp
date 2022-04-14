@@ -97,8 +97,8 @@ namespace ft
         
         ~Tree()
         {
-            // clear();
-            // _allocNode.deallocate(_end_node, 1);
+            clear();
+            _allocNode.deallocate(_end_node, 1);
         }
 
         // -------------------------------------------
@@ -106,7 +106,7 @@ namespace ft
         // -------------------------------------------
 
 
-        Node*       _last(void) { set_end_node(); return _end_node; }
+        Node*       _last(void) const { set_end_node(); return _end_node; }
         Node*       root(void) const { return _root; }
 
 
@@ -123,6 +123,7 @@ namespace ft
 
         void        insert(value_type v) { _root = insert(_root, v); }
         void        erase(key_type key) { _root = erase(_root, key); }
+
         void clear()
         {
             while (_size != 0)
@@ -456,7 +457,7 @@ namespace ft
             return node;
         }
 
-        void set_end_node(void)
+        void set_end_node(void) const
         {
             if (_root)
                 _end_node->parent = maxValueNode(_root);

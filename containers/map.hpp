@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/14 14:16:22 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/14 20:49:21 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ namespace ft
         typedef typename allocator_type::const_pointer              const_pointer;
         typedef Tree< const value_type, Compare, Alloc>		const_tree;
         typedef	map_iterator<bidirectional_iterator_tag, const_tree, tree>		const_iterator;
-        // typedef ???                                             reverse_iterator;
-        // typedef ???                                             const_reverse_iterator;
         typedef ptrdiff_t                                           difference_type;
         typedef size_t                                              size_type;
 
@@ -57,21 +55,20 @@ namespace ft
             for (; first != last; ++first)
                 insert(*first);
         }
-        map (const map& x) : _tree(x._tree) { }
+        map (const map& x) { *this = x; }
 
-        ~map() {}
+        ~map() { clear();}
 
-        map &operator=(const map &x)
-        {
-            _tree = x._tree;
+        map& operator= (const map& x) {
+            clear();
+            insert(x.begin(), x.end());
             return *this;
         }
 
         //              ----------------  Iterators ----------------
-        // iterator end() { return iterator(_tree._last(), _tree._last()); }
- 			iterator				begin() { return iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
+ 			iterator				begin() const { return iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
             const_iterator          rbegin() const { return const_iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
-            iterator                end() { return iterator(_tree._last(), _tree._last()); }
+            iterator                end() const { return iterator(_tree._last(), _tree._last()); }
             const_iterator          rend() const { return const_iterator(_tree._last(), _tree._last()); }
         
         
@@ -151,10 +148,10 @@ namespace ft
                         return it;
                 return end();
         }
-        void swap(map& x)
-        {
-            // call constructor copy of tree
-            _tree.swap(x._tree);
+        void swap (map& x){
+            map tmp = *this;
+            *this = x;
+            x = tmp;
         }
 
         size_type count (const key_type& k) const

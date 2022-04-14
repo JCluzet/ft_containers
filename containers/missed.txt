@@ -6,8 +6,6 @@ rend
 
  Modifiers :
 
-clear
-
  Observers :
 
 value_comp

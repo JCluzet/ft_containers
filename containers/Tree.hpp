@@ -11,6 +11,11 @@ namespace ft
     class Tree
     {
     public:
+
+        // ------------------------------------------
+        // ----------------  TypeDEF ----------------
+        // ------------------------------------------
+
         typedef Alloc allocator_type;
         typedef T value_type;
         typedef typename T::first_type key_type;
@@ -21,16 +26,19 @@ namespace ft
         typedef T &reference;
         typedef T *pointer;
 
-        // pair structure that represents a node in the tree
+        // ------------------------------------------
+        // -------------- NODE STRUCT ---------------
+        // ------------------------------------------
+
         struct Node
         {
-            value_type pair; // holds the key
-            Node *parent;    // pointer to the parent
-            Node *left;      // pointer to left child
-            Node *right;     // pointer to right child
-            int height;          // balance factor of the node
+            value_type pair;               // -> containing the key and the value
+            Node *parent;                  // pointer on the parent node (nullptr if root)
+            Node *left;                    // pointer to left child
+            Node *right;                   // pointer to right child
+            int height;                    // height of the node (used for balancing)
 
-            Node *min()
+            Node *min()                    // return the minimum node of the subtree
             {
                 Node *cur = this;
                 while (cur->left != nullptr)
@@ -38,7 +46,7 @@ namespace ft
                 return cur;
             }
 
-            Node *max()
+            Node *max()                    // return the maximum node of the subtree
             {
                 Node *cur = this;
                 while (cur->right != nullptr)
@@ -47,11 +55,32 @@ namespace ft
             }
         };
 
+        // ------------------------------------------
+        // ---------------- CONSTRUCTOR -------------
+        // ------------------------------------------
+
+
+        Tree(const key_compare &comp = key_compare(),
+             const allocator_type &alloc = allocator_type())
+            : _allocValue(alloc), _comp(comp)
+        {
+            _root = NULL;
+            _size = 0;
+            _end_node = _allocNode.allocate(1);
+            set_end_node();
+        }
+        
+        ~Tree()
+        {
+            // clear();
+            // _allocNode.deallocate(_end_node, 1);
+        }
+
         void swap(Tree &other)
         {
-				Node* tmp = this->_root;
-				this->_root = other._root;
-				other._root = tmp;
+			Node* tmp = this->_root;
+			this->_root = other._root;
+			other._root = tmp;
         }
 
         size_type count(const key_type &key) const
@@ -73,20 +102,27 @@ namespace ft
         {
             // clear();
             while (_size != 0)
-                deleteNode(minimum()->pair.first);
+                erase(minimum()->pair.first);
             _root = nullptr;
             _end_node->parent = nullptr;
             _end_node->left = _end_node->right = nullptr;
             _size = 0;
         }
 
+        size_type   size(void) const { return _size; }
+        Node*       root(void) const { return _root; }
+        Node*       minimum(void) const { return (_size ? minValueNode(_root) : NULL); }
+        Node*       maximum(void) const { return (_size ? maxValueNode(_root) : NULL); }
+        Node*       _last(void) { set_end_node(); return _end_node; }
+        void        insert(value_type v) { _root = insert(_root, v); }
+        Node*       find(key_type key) const{ return search(key); }
+        key_compare key_comp() const { return _comp; }
+        void        prettyPrint() const { print_tree(this->_root); }
+        void        erase(key_type key) { _root = erase(_root, key); }
+        size_type   max_size() const { return _allocNode.max_size(); }
+
+
     private:
-        Node*                   _root;
-        Node*                   _end_node;
-        allocator_type          _allocValue;
-        std::allocator<Node>    _allocNode;
-        size_type               _size;
-        key_compare             _comp; 
 
         // A utility function to get height
         // of the tree
@@ -196,7 +232,7 @@ namespace ft
             return NULL;
         }
 
-        Node *insertp(Node *node, value_type key, Node* parent = NULL)
+        Node *insert(Node *node, value_type key, Node* parent = NULL)
         {
             /* 1. Perform the normal BST rotation */
             if (node == NULL){
@@ -205,9 +241,9 @@ namespace ft
             }
 
             if (_comp(key.first, node->pair.first))
-                node->left = insertp(node->left, key, node);
+                node->left = insert(node->left, key, node);
             else if (_comp(node->pair.first, key.first))
-                node->right = insertp(node->right, key, node);
+                node->right = insert(node->right, key, node);
             else // Equal keys not allowed
                 return node;
 
@@ -279,7 +315,7 @@ namespace ft
         // with given key from subtree with
         // given _root. It returns _root of the
         // modified subtree.
-        Node *deleteNodep(Node *node, key_type key)
+        Node *erase(Node *node, key_type key)
         {
 
             // STEP 1: PERFORM STANDARD BST DELETE
@@ -290,13 +326,13 @@ namespace ft
             // than the _root's key, then it lies
             // in left subtree
             if (_comp(key, node->pair.first))
-                node->left = deleteNodep(node->left, key);
+                node->left = erase(node->left, key);
 
             // If the key to be deleted is greater
             // than the _root's key, then it lies
             // in right subtree
             else if (_comp(node->pair.first, key))
-                node->right = deleteNodep(node->right, key);
+                node->right = erase(node->right, key);
 
             // if key is same as _root's key, then
             // This is the node to be deleted
@@ -457,35 +493,12 @@ namespace ft
             std::cout << std::endl;
         }
 
-    public :
-
-        Tree(const key_compare &comp = key_compare(),
-             const allocator_type &alloc = allocator_type())
-            : _allocValue(alloc), _comp(comp)
-        {
-            _root = NULL;
-            _size = 0;
-            _end_node = _allocNode.allocate(1);
-            set_end_node();
-        }
-        
-        ~Tree()
-        {
-            // clear();
-            // _allocNode.deallocate(_end_node, 1);
-        }
-
-        size_type   size(void) const { return _size; }
-        Node*       root(void) const { return _root; }
-        Node*       minimum(void) const { return (_size ? minValueNode(_root) : NULL); }
-        Node*       maximum(void) const { return (_size ? maxValueNode(_root) : NULL); }
-        Node*       _last(void) { set_end_node(); return _end_node; }
-        void        insert(value_type v) { _root = insertp(_root, v); }
-        Node*       find(key_type key) const{ return search(key); }
-        key_compare key_comp() const { return _comp; }
-        void        prettyPrint() const { print_tree(this->_root); }
-        void        deleteNode(key_type key) { _root = deleteNodep(_root, key); }
-        size_type   max_size() const { return _allocNode.max_size(); }
-
+    private:
+        Node*                   _root;
+        Node*                   _end_node;
+        allocator_type          _allocValue;
+        std::allocator<Node>    _allocNode;
+        size_type               _size;
+        key_compare             _comp; 
     };
 }

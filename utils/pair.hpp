@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 14:39:20 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/30 17:20:12 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/14 03:19:04 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,5 @@ namespace ft
         first_type first;
         second_type second;
     };
+
 }

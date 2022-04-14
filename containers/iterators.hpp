@@ -420,6 +420,31 @@ namespace ft
 				return *this;
 			}
 
+            map_iterator&  operator--()
+            {
+                // find the smallest greater
+                if (this->_begin->left)
+                {
+                    this->_begin = this->_begin->left->max();
+                    return *this;
+                }
+                else if (this->_begin->parent)
+                {
+                    // find first previous greater node
+                    key_type key = this->_begin->pair.first;
+                    Node *tmp = this->_begin->parent;
+                    while (tmp && this->_comp(key, tmp->pair.first))
+                        tmp = tmp->parent;
+                    if (tmp)
+                    {
+                        this->_begin = tmp;
+                        return *this;
+                    }
+                }
+                this->_begin = this->_end;
+                return *this;
+            }
+
         // map_iterator& operator++()
         // {
         //     if (this->_begin->next)
@@ -466,6 +491,7 @@ namespace ft
 			// }
 
             map_iterator    operator++(int) { map_iterator tmp = *this; ++*this; return tmp; }
+            map_iterator    operator--(int) { map_iterator tmp = *this; --*this; return tmp; }
             private:
                 Node*		_begin;
                 Node*		_end;

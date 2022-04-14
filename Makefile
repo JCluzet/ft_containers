@@ -9,13 +9,15 @@
 
 NAME        := container
 CC         := c++
-FLAGS    := -Wall -Wextra -Werror -fsanitize=address -g3
+FLAGS    := -Wall -Wextra -Werror -std=c++98
  
 ################################################################################
 #                                 PROGRAM'S SRCS                               #
 ################################################################################
 
-SRCS        :=      main.cpp \
+SRCS        :=      ft_main.cpp \
+                        #   containers/newtest.cpp \
+                          std_main.cpp \
                           
 OBJS        := ${SRCS:.cpp=.o}
 
@@ -37,7 +39,8 @@ RM		    := rm -f
 
 ${NAME}:	${OBJS}
 			@echo "$(GREEN)Compilation ${CLR_RMV}of ${YELLOW}$(NAME) ${CLR_RMV}..."
-			${CC} ${FLAGS} -o ${NAME} ${OBJS}
+			${CC} ${FLAGS} -o ft_container ft_main.cpp
+			${CC} ${FLAGS} -o std_container std_main.cpp
 			@echo "$(GREEN)$(NAME) created[0m ✔️"
 
 all:		${NAME}

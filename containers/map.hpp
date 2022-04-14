@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/13 17:52:29 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/14 03:28:54 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,7 @@ namespace ft
 
         //              ----------------  Iterators ----------------
         // iterator end() { return iterator(_tree._last(), _tree._last()); }
- 			iterator				begin() {
-				return iterator(this->_tree.root(), this->_tree._last());
-			}
+ 			iterator				begin() { return iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
         iterator end() 
             { return iterator(_tree._last(), _tree._last()); }
         
@@ -106,13 +104,14 @@ namespace ft
             return ret.first;
         }
 
-        void erase(iterator position) { _tree.deleteNode(*position); }
+        void erase(iterator position) { _tree.deleteNode((*position).first); }
 
         size_type erase (const key_type& k)
         {
             size_type n = this->size();
             // iterator it = find(k);
-            _tree.deleteNode(make_pair(k, mapped_type()));
+            value_type data = *(find(k));
+				_tree.deleteNode(data.first);
             return (n != this->size());
         }
 
@@ -125,8 +124,7 @@ namespace ft
         // void erase(key_type const& k) { _tree.deleteNode(k); }
 
         // void clear() { 
-        //     for (iterator it = begin(); it != end(); ++it)
-        //         erase(it);
+        //     for (iterator it = begin(); 
         // }
 
         void clear() { _tree.clear(); }

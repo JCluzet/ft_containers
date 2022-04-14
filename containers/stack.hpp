@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 03:56:12 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/03/20 02:16:38 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/14 14:25:12 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ namespace ft
     template <class T, class Container = vector<T> >
     class stack
     {
+    public:
         typedef Container	container_type;
 		typedef	T			value_type;
 		typedef size_t		size_type;

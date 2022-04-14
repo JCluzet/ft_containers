@@ -126,8 +126,8 @@ namespace ft
 
         void clear()
         {
-            while (_size != 0)
-                erase(minimum()->pair.first);
+            while (_root != nullptr)
+                _root = erase(_root, _root->pair.first);
             _root = nullptr;
             _end_node->parent = nullptr;
             _end_node->left = _end_node->right = nullptr;

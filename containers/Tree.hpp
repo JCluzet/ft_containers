@@ -54,6 +54,22 @@ namespace ft
             }
         };
 
+
+        class value_compare
+			{
+				friend class Tree;
+				protected:
+					Compare comp;
+					value_compare (key_compare c) : comp(c) {}
+				public:
+					typedef bool		result_type;
+					typedef value_type	first_argument_type;
+					typedef value_type	second_argument_type;
+					bool operator() (const value_type& x, const value_type& y) const {
+						return comp(x.first, y.first); }
+		};
+
+        value_compare	value_comp() const { return value_compare(this->_comp); }
         // ------------------------------------------
         // ---------------- CONSTRUCTOR -------------
         // ------------------------------------------
@@ -162,22 +178,6 @@ namespace ft
             return node1;
         }
 
-
-        class value_compare
-			{
-					friend class Tree;
-				protected:
-					Compare comp;
-					value_compare (key_compare c) : comp(c) {}
-				public:
-					typedef bool		result_type;
-					typedef value_type	first_argument_type;
-					typedef value_type	second_argument_type;
-					bool operator() (const value_type& x, const value_type& y) const {
-						return comp(x.first, y.first); }
-			};
-
-        value_compare	value_comp() const { return value_compare(this->_comp); }
         // ------------------------------------------
         // ----------------   UTILS   ---------------
         // ------------------------------------------

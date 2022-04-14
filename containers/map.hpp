@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/14 20:49:21 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/14 23:09:24 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,9 @@ namespace ft
         }
         map (const map& x) { *this = x; }
 
-        ~map() { clear();}
+        ~map() { 
+            // clear();
+        }
 
         map& operator= (const map& x) {
             clear();

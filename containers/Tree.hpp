@@ -126,12 +126,9 @@ namespace ft
 
         void clear()
         {
-            while (_root != nullptr)
+            while(_root)
                 _root = erase(_root, _root->pair.first);
-            _root = nullptr;
-            _end_node->parent = nullptr;
-            _end_node->left = _end_node->right = nullptr;
-            _size = 0;
+            set_end_node();
         }
         
         void swap(Tree &other)
@@ -185,13 +182,6 @@ namespace ft
 
         Node*       minimum(void) const { return (_size ? minValueNode(_root) : NULL); }
         Node*       maximum(void) const { return (_size ? maxValueNode(_root) : NULL); }
-        // pair<const_iterator,const_iterator> equal_range (const key_type& k) const
-        // {
-        //     Node* node = searching(k);
-        //     if (node == nullptr)
-        //         return pair<const_iterator,const_iterator>(end(), end());
-        //     return pair<const_iterator,const_iterator>(const_iterator(node), const_iterator(node->max()));
-        // }
         allocator_type get_allocator() const { return _allocValue; }
         Node*       maximum(Node* node1, Node* node2) const { return (_size ? maxValueNode(node1, node2) : NULL); }
         void        prettyPrint() const { print_tree(this->_root); }
@@ -233,10 +223,8 @@ namespace ft
             x->right = y;           // rotation
             y->left = T2;
 
-            y->height = _comp(height(y->left),
-                            height(y->right)) + 1;
-            x->height = _comp(height(x->left),
-                            height(x->right)) + 1;
+            y->height = height(y->left) < height(y->right) ? height(y->right) + 1 : height(y->left) + 1;
+            x->height = height(x->left) < height(x->right) ? height(x->right) + 1 : height(x->left) + 1;
 
             // Return new_root 
             return x;
@@ -255,10 +243,8 @@ namespace ft
             y->left = x;                   // rotation
             x->right = T2;
 
-            x->height = _comp(height(x->left),
-                            height(x->right)) + 1;
-            y->height = _comp(height(y->left),
-                            height(y->right)) + 1;
+            x->height = height(x->left) < height(x->right) ? height(x->right) + 1 : height(x->left) + 1;
+            y->height = height(y->left) < height(y->right) ? height(y->right) + 1 : height(y->left) + 1;
 
             // Return new_root 
             return y;
@@ -303,8 +289,8 @@ namespace ft
                 return node;
 
             /* 2. Update height and balanced factor */
-            node->height = 1 + max(height(node->left),
-                                   height(node->right));
+            node->height = height(node->left) > height(node->right) ? height(node->left) : height(node->right);
+            node->height++;
             int balance = getBalance(node);
 
             // If this node becomes unbalanced,
@@ -331,14 +317,15 @@ namespace ft
                 return leftRotate(node);
             }
 
-            // else, return the original node
+            set_end_node();
             return node;
         }
 
         Node *minValueNode(Node *node) const
         {
+            if (!node)            // if the node don't exist
+                return node; 
             Node *cur = node;
-
             while (cur->left != NULL)
                 cur = cur->left;
 
@@ -347,6 +334,8 @@ namespace ft
 
         Node *maxValueNode(Node *node) const
         {
+            if (!node) 
+                return NULL;
             Node *cur = node;
 
             while (cur->right != NULL)
@@ -357,7 +346,7 @@ namespace ft
 
         Node *erase(Node *node, key_type key)
         {
-            if (node == NULL)            // if the node don't exist
+            if (!node)            // if the node don't exist
                 return node;                
 
             // If the key to be deleted is smaller
@@ -417,8 +406,10 @@ namespace ft
 						// destroy it
 						this->_allocValue.destroy(&node->pair);
 						this->_allocNode.deallocate(node, 1);
+                        _size--;
 						node = tmp;
 					}
+                
             }
 
             // If the tree had only one node then return
@@ -454,12 +445,13 @@ namespace ft
                 node->right = rightRotate(node->right);
                 return leftRotate(node);
             }
+            // set_end_node();
             return node;
         }
 
         void set_end_node(void) const
         {
-            if (_root)
+            if (_size)
                 _end_node->parent = maxValueNode(_root);
             else
                 _end_node->parent = nullptr;

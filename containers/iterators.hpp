@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 15:00:40 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/14 13:43:02 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/15 14:37:50 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,17 +131,22 @@ namespace ft
 			typedef Category							iterator_category;
  
 			map_iterator() {}
-			// map_iterator(const map_iterator<Category, not_const_T> &toCopy) : _begin(toCopy.base()), _end(toCopy.end()) {}
+			map_iterator(const map_iterator<Category, not_const_T> &toCopy) : _begin(toCopy.base()), _end(toCopy.end()) {}
 			map_iterator(Node* node, Node* end) {
 				this->_begin = node;
 				this->_end = end;
 			}
+
+			Node*			base() const { return this->_begin; }
+			Node*			end() const { return this->_end; }
+
+
+
 			virtual ~map_iterator() {}
+
             
             reference   	operator*() const { return this->_begin->pair; }
 
-			// Node*			base() const { return this->_ptr; }
-			Node*			end() const { return this->_end; }
 
             bool operator!=(const map_iterator<Category, T, not_const_T> &other) const
             {
@@ -159,40 +164,6 @@ namespace ft
                     return nullptr;
                 return &(operator*)();
             }
-
-            // map_iterator& operator--(int)
-            // {
-            //     map_iterator tmp(*this);
-                
-            //     return tmp;
-            // }
-
-            // map_iterator& operator++()
-            // {
-            //     this->_begin = this->_begin->next;
-            //     return *this;
-            // }
-
-		// map_iterator&
-		// operator++() throw() {
-
-		// 	if (!pair->right) {
-		// 		pair = pair->_right;
-		// 		if (pair->_last_node)
-		// 			return iterator(ptr);
-		// 		while (!ptr->_left->_last_node && !ptr->_left->_null)
-		// 			ptr = ptr->_left;
-		// 	} else {
-		// 		if (_key_comp(ptr, ptr->_parent))
-		// 			ptr = ptr->_parent;
-		// 		else {
-		// 			while (!_key_comp(ptr, ptr->_parent))
-		// 				ptr = ptr->_parent;
-		// 			ptr = ptr->_parent;
-		// 		}
-		// 	}
-		// 	return iterator(ptr);
-		// }
 
 			map_iterator&   operator++()
 			{
@@ -243,51 +214,6 @@ namespace ft
                 this->_begin = this->_end;
                 return *this;
             }
-
-        // map_iterator& operator++()
-        // {
-        //     if (this->_begin->next)
-        //         this->_begin = this->_begin->next;
-        //     else
-        //     {
-        //         Node* tmp = this->_begin;
-        //         while (tmp->next == NULL)
-        //         {
-        //             tmp = tmp->parent;
-        //             if (tmp == NULL)
-        //                 break;
-        //         }
-        //         if (tmp == NULL)
-        //             this->_begin = NULL;
-        //         else
-        //             this->_begin = tmp->next;
-        //     }
-        //     return *this;
-        // }
-            
-
-            // map_iterator&   operator++()
-			// {
-			// 	if (_begin->right)
-			// 	{
-			// 		_begin = _begin->right->min();
-			// 		return *this;
-			// 	}
-			// 	else if (_begin->parent)
-			// 	{
-			// 		key_type key = _begin->pair.first;
-			// 		Node *tmp = _begin->parent;
-			// 		while (tmp && _comp(tmp->pair.first, key))
-			// 			tmp = tmp->parent;
-			// 		if (tmp)
-			// 		{
-			// 			_begin = tmp;
-			// 			return *this;
-			// 		}
-			// 	}
-			// 	_begin = _end;
-			// 	return *this;
-			// }
 
             map_iterator    operator++(int) { map_iterator tmp = *this; ++*this; return tmp; }
             map_iterator    operator--(int) { map_iterator tmp = *this; --*this; return tmp; }

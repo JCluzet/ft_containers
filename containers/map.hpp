@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/15 15:31:52 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/15 16:42:44 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,9 @@ namespace ft
         typedef Tree< const value_type, Compare, Alloc>		const_tree;
         
         typedef typename allocator_type::reference                  reference;
-        typedef typename allocator_type::const_reference            const_reference;
-        typedef typename allocator_type::pointer                    pointer;
         typedef typename tree::value_compare				        value_compare;
-        typedef typename allocator_type::const_pointer              const_pointer;
         typedef	map_iterator<bidirectional_iterator_tag, const_tree, tree>		const_iterator;
-        typedef ptrdiff_t                                           difference_type;
+        typedef	r_iterator<iterator>							reverse_iterator;	
         typedef size_t                                              size_type;
 
         //              ----------------  Constructor ----------------
@@ -69,10 +66,12 @@ namespace ft
         }
 
         //              ----------------  Iterators ----------------
- 			iterator				begin()  { return iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
- 			const_iterator				begin() const  { return const_iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
+ 			iterator				begin() { return iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
+ 			reverse_iterator				rbegin() const { return reverse_iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
+ 			const_iterator				begin() const { return const_iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
             const_iterator                end() const { return const_iterator(_tree._last(), _tree._last()); }
             iterator                end() { return iterator(_tree._last(), _tree._last()); }
+            reverse_iterator                rend() const { return reverse_iterator(_tree._last(), _tree._last()); }
         
         
         //              ----------------  Capacity ----------------

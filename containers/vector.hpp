@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/15 15:41:33 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/15 16:05:07 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ namespace ft
         typedef typename allocator_type::reference              reference;
         typedef typename allocator_type::const_reference        const_reference;
         typedef vectiterator<T>                                 iterator;
-        typedef	rvectiterator<iterator>							reverse_iterator;
+        typedef	r_iterator<iterator>							reverse_iterator;
         
         typedef size_t size_type;
         typedef typename allocator_type::pointer pointer;

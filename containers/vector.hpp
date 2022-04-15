@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/15 17:02:39 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/15 18:52:55 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ namespace ft
         typedef typename std::ptrdiff_t						    difference_type;
         typedef typename allocator_type::reference              reference;
         typedef typename allocator_type::const_reference        const_reference;
-        typedef vectiterator<T>                                 iterator;
-        typedef vectiterator<T>                                 const_iterator;
-        typedef	r_iterator<iterator>							reverse_iterator;
+        typedef	vectiterator<random_access_iterator_tag, T>		iterator;
+        typedef vectiterator<random_access_iterator_tag, T>                                 const_iterator;
+        typedef	reverse_iterator<iterator>							reverse_iterator;
         
         typedef size_t size_type;
         typedef typename allocator_type::pointer pointer;

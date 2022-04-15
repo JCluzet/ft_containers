@@ -6,12 +6,13 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/15 16:42:44 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/15 19:17:06 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include "iterators.hpp"
+#include "reverse_iterator.hpp"
 
 #include "Tree.hpp"
 #include "../utils/pair.hpp"
@@ -39,7 +40,7 @@ namespace ft
         typedef typename allocator_type::reference                  reference;
         typedef typename tree::value_compare				        value_compare;
         typedef	map_iterator<bidirectional_iterator_tag, const_tree, tree>		const_iterator;
-        typedef	r_iterator<iterator>							reverse_iterator;	
+        typedef	reverse_iterator<iterator>							reverse_iterator;	
         typedef size_t                                              size_type;
 
         //              ----------------  Constructor ----------------
@@ -67,11 +68,11 @@ namespace ft
 
         //              ----------------  Iterators ----------------
  			iterator				begin() { return iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
- 			reverse_iterator				rbegin() const { return reverse_iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
+            iterator                end() { return iterator(_tree._last(), _tree._last()); }
  			const_iterator				begin() const { return const_iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
             const_iterator                end() const { return const_iterator(_tree._last(), _tree._last()); }
-            iterator                end() { return iterator(_tree._last(), _tree._last()); }
-            reverse_iterator                rend() const { return reverse_iterator(_tree._last(), _tree._last()); }
+ 			reverse_iterator				rbegin() { return reverse_iterator(this->end()); }
+ 			reverse_iterator				rend() { return reverse_iterator(this->begin()); }
         
         
         //              ----------------  Capacity ----------------

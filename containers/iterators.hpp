@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 15:00:40 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/15 15:56:31 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/15 18:55:40 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,16 @@ namespace ft
 	struct random_access_iterator_tag {};
 	struct bidirectional_iterator_tag {};
 	
-    template <class T, class Distance = ptrdiff_t>
+    template <class Category, class T, class Distance = ptrdiff_t, class Reference = T&,  class Pointer = T*>
     class vectiterator
     {
     private:
         T *_ptr;
     public:
+        typedef T                               value_type;
+		typedef Pointer   						pointer;
+        typedef Category						iterator_category;
+		typedef Reference 						reference;
         typedef Distance						difference_type;
         vectiterator(T *ptr)
         {

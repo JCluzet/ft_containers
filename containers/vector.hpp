@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/15 16:05:07 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/15 17:02:39 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ namespace ft
         typedef typename allocator_type::reference              reference;
         typedef typename allocator_type::const_reference        const_reference;
         typedef vectiterator<T>                                 iterator;
+        typedef vectiterator<T>                                 const_iterator;
         typedef	r_iterator<iterator>							reverse_iterator;
         
         typedef size_t size_type;
@@ -301,8 +302,10 @@ namespace ft
         // --------------------------ITERATORS-----------------------------
 
         iterator begin() { return iterator(this->_begin); }
+        const_iterator begin() const { return const_iterator(this->_begin); }
 
         iterator end() { return iterator(this->_begin) + _size; }
+        const_iterator end() const { return const_iterator(this->_begin) + _size; }
 
         reverse_iterator rbegin() { return reverse_iterator(this->_begin) + _size - 1; }
 

@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/15 14:34:54 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/15 15:31:52 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,8 @@ namespace ft
         size_type erase (const key_type& k)
         {
             size_type n = this->size();
-            // iterator it = find(k);
+            if (!count(k))
+                return 0;
             value_type data = *(find(k));
 				_tree.erase(data.first);
             return (n != this->size());
@@ -136,7 +137,6 @@ namespace ft
         }
 
         void clear() { _tree.clear(); }
-        // void clear
 
         iterator    lower_bound(const key_type& k) {
 				for (iterator it = begin(); it != end(); it++)

@@ -6,12 +6,13 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/14 14:44:58 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/15 15:41:33 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include "iterators.hpp"
+#include "reverse_iterator.hpp"
 #include "../utils/enable_if.hpp"
 
 namespace ft
@@ -21,12 +22,14 @@ namespace ft
     {
     public:
         // --------------------------TYPEDEF------------------------------ //   ✅
-        typedef T value_type;
-        typedef Alloc allocator_type; // alloc use?
-        typedef typename std::ptrdiff_t						difference_type;
-        typedef typename allocator_type::reference reference;
-        typedef typename allocator_type::const_reference const_reference;
-        typedef vectiterator<T> iterator;
+        typedef T                                               value_type;
+        typedef Alloc                                           allocator_type;
+        typedef typename std::ptrdiff_t						    difference_type;
+        typedef typename allocator_type::reference              reference;
+        typedef typename allocator_type::const_reference        const_reference;
+        typedef vectiterator<T>                                 iterator;
+        typedef	rvectiterator<iterator>							reverse_iterator;
+        
         typedef size_t size_type;
         typedef typename allocator_type::pointer pointer;
 
@@ -155,7 +158,7 @@ namespace ft
         // --------------------------MODIFIERS----------------------------- //      ✅
 
         template <class InputIterator>
-        void assign(InputIterator first, InputIterator last, typename ft::enable_if<!std::numeric_limits<InputIterator>::is_integer>::type * = 0)
+        void assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::is_integer>::type * = 0)
         {
             while (_size > 0)
                 _alloc.destroy(&_begin[_size--]);
@@ -198,36 +201,6 @@ namespace ft
 			_size++;
 			return;
 		}
-
-        // void push_back(const value_type &val)
-        // {
-        //     size_type oldcap = 1;
-        //     if (_capacity >= _size + 1)
-        //     {
-        //         this->_alloc.construct(&this->_begin[_size], val);
-        //         _size++;
-        //         return;
-        //     }
-        //     if (this->_capacity > 0)
-        //     {
-        //         oldcap = _capacity;
-        //         this->_capacity = _capacity * 2;
-        //     }
-        //     else
-        //         this->_capacity = 1;
-        //     pointer tmp = this->_begin;
-        //     this->_begin = this->_alloc.allocate(oldcap);
-        //     for (size_type i = 0; i < this->_size; i++)
-        //     {
-        //         this->_alloc.construct(&this->_begin[i], tmp[i]);
-        //         this->_alloc.destroy(&tmp[i]);
-        //     }
-        //     this->_alloc.construct(&this->_begin[this->_size], val);
-        //     this->_alloc.deallocate(tmp, this->_capacity);
-        //     _size++;
-        // }
-
-        // include for sleep function
 
         void pop_back()
         {
@@ -304,18 +277,6 @@ namespace ft
             return first;
         }
 
-        // iterator erase (iterator first, iterator last){
-		// 	vector tmp(last, end());
-		// 	iterator it = end() - 1;
-		// 	while (it != first - 1){
-		// 		pop_back();
-		// 		it--;
-		// 	}
-		// 	for (iterator ite = tmp.begin(); ite != tmp.end(); ite++)
-		// 		push_back(*ite);
-		// 	return first;
-		// }
-
         void swap (vector& x){
 			pointer			bg = _begin;
 			size_type		size = _size;
@@ -337,15 +298,15 @@ namespace ft
             resize(0);
         }
 
-        // --------------------------ITERATORS----------------------------- // missing const iterator
+        // --------------------------ITERATORS-----------------------------
 
         iterator begin() { return iterator(this->_begin); }
 
         iterator end() { return iterator(this->_begin) + _size; }
 
-        iterator rbegin() { return iterator(this->_begin) + _size - 1; }
+        reverse_iterator rbegin() { return reverse_iterator(this->_begin) + _size - 1; }
 
-        iterator rend() { return iterator(this->_begin) - 1; }
+        reverse_iterator rend() { return reverse_iterator(this->_begin) - 1; }
 
         // --------------------------ALLOCATOR------------------------------- //  ✅
 
@@ -403,7 +364,4 @@ namespace ft
     {
         return !(lhs < rhs);
     }
-    
-    
-    
 }

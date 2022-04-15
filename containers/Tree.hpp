@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Tree.hpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/15 15:32:39 by jcluzet           #+#    #+#             */
+/*   Updated: 2022/04/15 15:42:15 by jcluzet          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 #pragma once
 #include <iostream>
 #include <memory>
@@ -294,7 +307,6 @@ namespace ft
             int balance = getBalance(node);
 
             // If this node becomes unbalanced,
-            // then there are 4 cases
 
             // Left Left Case
             if (balance > 1 && _comp(key.first, node->left->pair.first))
@@ -349,20 +361,12 @@ namespace ft
             if (!node)            // if the node don't exist
                 return node;                
 
-            // If the key to be deleted is smaller
-            // than the _root's key, then it lies
-            // in left subtree
+
             if (_comp(key, node->pair.first))
                 node->left = erase(node->left, key);
-
-            // If the key to be deleted is greater
-            // than the _root's key, then it lies
-            // in right subtree
             else if (_comp(node->pair.first, key))
                 node->right = erase(node->right, key);
 
-            // if key is same as _root's key, then
-            // This is the node to be deleted
             else
             {
                 // node with only one child or no child
@@ -421,9 +425,6 @@ namespace ft
                                    height(node->right));
             int balance = getBalance(node);
 
-            // If this node becomes unbalanced,
-            // then there are 4 cases
-
             // Left Left Case
             if (balance > 1 && getBalance(node->left) >= 0)
                 return rightRotate(node);
@@ -445,7 +446,6 @@ namespace ft
                 node->right = rightRotate(node->right);
                 return leftRotate(node);
             }
-            // set_end_node();
             return node;
         }
 
@@ -490,9 +490,7 @@ namespace ft
                 print_tree(_root->left, lvl + 1);
                 padding('\t', lvl);
                 std::cout << _root->pair.first << ":" << _root->pair.second << ";";
-                // if (_root->parent)
 
-                // std::cout  << (_root->parent->pair.first) << ";";
                 if (_root->parent)
                     std::cout << _root->parent->pair.first;
                 else

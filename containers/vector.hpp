@@ -28,8 +28,8 @@ namespace ft
         typedef typename allocator_type::reference              reference;
         typedef typename allocator_type::const_reference        const_reference;
         typedef	vectiterator<random_access_iterator_tag, T>		iterator;
-        typedef vectiterator<random_access_iterator_tag, T>                                 const_iterator;
-        typedef	reverse_iterator<iterator>							reverse_iterator;
+        typedef vectiterator<random_access_iterator_tag, T>             const_iterator;
+        typedef	reverse_iterator_vec<random_access_iterator_tag, T>		reverse_iterator;
         
         typedef size_t size_type;
         typedef typename allocator_type::pointer pointer;
@@ -308,8 +308,9 @@ namespace ft
         const_iterator end() const { return const_iterator(this->_begin) + _size; }
 
         reverse_iterator rbegin() { return reverse_iterator(this->_begin) + _size - 1; }
-
         reverse_iterator rend() { return reverse_iterator(this->_begin) - 1; }
+
+        // reverse_iterator rend() { return reverse_iterator(this->_begin) - 1; }
 
         // --------------------------ALLOCATOR------------------------------- //  ✅
 

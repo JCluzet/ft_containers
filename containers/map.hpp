@@ -40,7 +40,7 @@ namespace ft
         typedef typename allocator_type::reference                  reference;
         typedef typename tree::value_compare				        value_compare;
         typedef	map_iterator<bidirectional_iterator_tag, const_tree, tree>		const_iterator;
-        typedef	reverse_iterator<iterator>							reverse_iterator;	
+        typedef	reverse_iterator_map<bidirectional_iterator_tag, tree>							reverse_iterator;	
         typedef size_t                                              size_type;
 
         //              ----------------  Constructor ----------------
@@ -71,8 +71,8 @@ namespace ft
             iterator                end() { return iterator(_tree._last(), _tree._last()); }
  			const_iterator				begin() const { return const_iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
             const_iterator                end() const { return const_iterator(_tree._last(), _tree._last()); }
- 			reverse_iterator				rbegin() { return reverse_iterator(this->end()); }
- 			reverse_iterator				rend() { return reverse_iterator(this->begin()); }
+ 			reverse_iterator				rbegin() { return reverse_iterator((_tree.size() ? _tree.maximum() : _tree._last()), _tree._last()); }
+            reverse_iterator                rend() { return reverse_iterator(_tree._last(), _tree._last()); }
         
         
         //              ----------------  Capacity ----------------

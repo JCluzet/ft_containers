@@ -24,7 +24,7 @@ namespace ft
         T *_ptr;
     public:
         typedef T                               value_type;
-		typedef Pointer   						pointer;
+		// typedef Pointer   						Pointer;
         typedef Category						iterator_category;
 		typedef Reference 						reference;
         typedef Distance						difference_type;

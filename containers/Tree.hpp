@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/15 15:32:39 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/15 15:42:15 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/21 14:24:02 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -359,7 +359,7 @@ namespace ft
         Node *erase(Node *node, key_type key)
         {
             if (!node)            // if the node don't exist
-                return node;                
+                return node;
 
 
             if (_comp(key, node->pair.first))
@@ -407,7 +407,7 @@ namespace ft
 						}
 						tmp->parent->left = 0;
 						tmp->parent = node->parent;
-						// destroy it
+                        // destroy it
 						this->_allocValue.destroy(&node->pair);
 						this->_allocNode.deallocate(node, 1);
                         _size--;

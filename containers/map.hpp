@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/15 19:17:06 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/21 14:52:03 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ namespace ft
         typedef typename tree::value_compare				        value_compare;
         typedef	map_iterator<bidirectional_iterator_tag, const_tree, tree>		const_iterator;
         typedef	reverse_iterator_map<bidirectional_iterator_tag, tree>							reverse_iterator;	
+        typedef	reverse_iterator_map<bidirectional_iterator_tag,const_tree, tree>							const_reverse_iterator;	
         typedef size_t                                              size_type;
 
         //              ----------------  Constructor ----------------
@@ -67,12 +68,14 @@ namespace ft
         }
 
         //              ----------------  Iterators ----------------
- 			iterator				begin() { return iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
-            iterator                end() { return iterator(_tree._last(), _tree._last()); }
- 			const_iterator				begin() const { return const_iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
-            const_iterator                end() const { return const_iterator(_tree._last(), _tree._last()); }
+ 			iterator				        begin() { return iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
+            iterator                        end() { return iterator(_tree._last(), _tree._last()); }
+ 			const_iterator				    begin() const { return const_iterator((_tree.size() ? _tree.minimum() : _tree._last()), _tree._last()); }
+            const_iterator                  end() const { return const_iterator(_tree._last(), _tree._last()); }
  			reverse_iterator				rbegin() { return reverse_iterator((_tree.size() ? _tree.maximum() : _tree._last()), _tree._last()); }
             reverse_iterator                rend() { return reverse_iterator(_tree._last(), _tree._last()); }
+            const_reverse_iterator          rbegin () const { return const_reverse_iterator((_tree.size() ? _tree.maximum() : _tree._last()), _tree._last()); }
+            const_reverse_iterator          rend () const { return const_reverse_iterator(_tree._last(), _tree._last()); }
         
         
         //              ----------------  Capacity ----------------
@@ -151,10 +154,14 @@ namespace ft
                         return it;
                 return end();
         }
-        void swap (map& x){
-            map tmp = *this;
-            *this = x;
-            x = tmp;
+        // void swap (map& x){
+        //     map tmp = *this;
+        //     *this = x;
+        //     x = tmp;
+        // }
+
+        void swap (map &x){
+            _tree.swap(x._tree);
         }
 
         size_type count (const key_type& k) const

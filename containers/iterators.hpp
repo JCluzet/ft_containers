@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 15:00:40 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/15 18:55:40 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/22 14:19:55 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 namespace ft
 {
+
+    // Vector Iterators
 	struct random_access_iterator_tag {};
 	struct bidirectional_iterator_tag {};
 	
@@ -119,6 +121,7 @@ namespace ft
         }
     };
 
+    // MAP Iterators
     
     template < class Category, class T, class notconst_T = T>
 	class map_iterator
@@ -226,4 +229,17 @@ namespace ft
                 Node*		_end;
                 key_compare _comp;
     };
+
+    // Iterators TRAITS
+
+    template <class Iterator>
+	class iterator_traits
+	{
+		public:
+			typedef typename Iterator::difference_type		difference_type;
+			typedef typename Iterator::value_type			value_type;
+			typedef typename Iterator::pointer				pointer;
+			typedef typename Iterator::reference			reference;
+			typedef typename Iterator::iterator_category	iterator_category;
+	};
 }

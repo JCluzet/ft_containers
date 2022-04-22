@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 01:39:17 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/21 14:52:03 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/22 14:14:04 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,12 +122,12 @@ namespace ft
 
         size_type erase (const key_type& k)
         {
-            size_type n = this->size();
+            size_type i = this->size();
             if (!count(k))
                 return 0;
             value_type data = *(find(k));
 				_tree.erase(data.first);
-            return (n != this->size());
+            return (i != this->size());
         }
 
         void erase (iterator first, iterator last){
@@ -147,6 +147,20 @@ namespace ft
 						return it;
 				return end();
 		}
+
+        const_iterator lower_bound (const key_type& k) const {
+                for (const_iterator it = begin(); it != end(); it++)
+                    if (!_tree.key_comp()((*it).first, k))
+                        return it;
+                return end();
+        }
+
+        const_iterator upper_bound (const key_type& k) const {
+                for (const_iterator it = begin(); it != end(); it++)
+                    if (_tree.key_comp()(k, (*it).first))
+                        return it;
+                return end();
+        }
 
         iterator   upper_bound(const key_type& k) {
                 for (iterator it = begin(); it != end(); it++)
@@ -204,6 +218,7 @@ namespace ft
 					return pair<const_iterator, const_iterator>(it++, it);
 			return pair<const_iterator, const_iterator>(this->lower_bound(k), this->lower_bound(k));
 		}
+
 		pair<iterator,iterator>				equal_range(const key_type& k)
 		{
 			for (iterator it = this->begin(); it != this->end(); it++)

@@ -6,7 +6,7 @@
 /*   By: jcluzet <jcluzet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:42:25 by jcluzet           #+#    #+#             */
-/*   Updated: 2022/04/21 15:05:38 by jcluzet          ###   ########.fr       */
+/*   Updated: 2022/04/22 14:01:25 by jcluzet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,8 +159,8 @@ namespace ft
 
         // --------------------------MODIFIERS----------------------------- //      ✅
 
-        template <class InputIterator>
-        void assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::is_integer>::type * = 0)
+		template <class InputIterator>
+  		void			assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type * = 0)
         {
             while (_size > 0)
                 _alloc.destroy(&_begin[_size--]);
